@@ -1,0 +1,29 @@
+src/
+├── app.ts
+├── server.ts
+│
+├── config/
+├── routes/
+├── controllers/
+├── services/
+├── repositories/
+├── middlewares/
+├── utils/
+│
+├── types/
+│   ├── express.d.ts
+│   ├── env.d.ts
+│   └── common.ts
+│
+├── dtos/
+│   ├── create-user.dto.ts
+│   └── update-user.dto.ts
+│
+├── entities/
+│   └── user.entity.ts
+│
+└── interfaces/
+    ├── repositories/
+    │   └── user-repository.interface.ts
+    └── services/
+        └── hash-provider.interface.ts
