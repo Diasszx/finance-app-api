@@ -13,7 +13,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "migrations": "node/src/db/postgres/migrations/exec.ts"
   },
   "lint-staged": {
     "*.{ts,js}": [
