@@ -1,5 +1,5 @@
 import { PostgresHelper } from "../../db/postgres/helper.js";
-import type { CreateUserDTO } from "../../dtos/create-user.dto.js";
+import type { CreateUserDTO } from "../../dtos/users/create-user.dto.js";
 import type { User } from "../../entities/user.entity.js";
 
 export class PostgresCreateUserRepository {
