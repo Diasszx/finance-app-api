@@ -17,6 +17,6 @@ export class CreateUserService {
 
     const repository = new PostgresCreateUserRepository();
     const createdUser = await repository.execute(createUser);
-    return createUser;
+    return createdUser;
   }
 }
