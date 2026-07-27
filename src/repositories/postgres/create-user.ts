@@ -8,6 +8,11 @@ export class PostgresCreateUserRepository {
       "INSERT INTO users (ID, first_name,last_name,email,password) VALUES ($1,$2,$3,$4,$5) RETURNING *;",
       [user.id, user.first_name, user.last_name, user.email, user.password],
     );
-    return result[0];
+    const [createdUser] = result;
+
+    if (!createdUser) {
+      throw new Error("Falha do criar usuário.");
+    }
+    return createdUser;
   }
 }
