@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import { PostgresCreateUserRepository } from "../repositories/postgres/create-user.js";
-import type { CreateUserDTO } from "../dtos/users/create-user.dto.js";
+import type { CreateUserDTO } from "../schemas/users/create-user.schema.js";
 import type { User } from "../entities/user.entity.js";
 
 export class CreateUserService {
