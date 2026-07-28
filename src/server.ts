@@ -3,7 +3,7 @@ import express, { type Request, type Response } from "express";
 import { PostgresHelper } from "./db/postgres/helper.js";
 import { CreateUserController } from "./controllers/create-user.js";
 import { GetUserByIdController } from "./controllers/get-user-by-id.js";
-import type { GetUserByIdParamsDTO } from "./dtos/users/get-user-by-id-params.dto.js";
+import { type GetUserByIdParamsDTO } from "./schemas/users/get-user-by-id.schema.js";
 
 const app = express();
 app.use(express.json());
