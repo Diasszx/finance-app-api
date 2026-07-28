@@ -4,6 +4,7 @@ import { PostgresHelper } from "./db/postgres/helper.js";
 import { CreateUserController } from "./controllers/create-user.js";
 
 const app = express();
+app.use(express.json());
 
 app.post("/api/users", async (request: Request, response: Response) => {
   const createUserController = new CreateUserController();

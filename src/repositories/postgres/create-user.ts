@@ -12,6 +12,8 @@ export class PostgresCreateUserRepository {
     if (!createdUser) {
       throw new Error("Falha ao criar usuário.");
     }
+
+    console.log("Usuário criado:", createdUser);
     return createdUser;
   }
 }

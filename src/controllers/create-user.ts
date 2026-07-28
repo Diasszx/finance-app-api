@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { createUserSchema } from "../schemas/users/create-user.schema.js";
 import { CreateUserService } from "../services/create-user.js";
 import { ZodError } from "zod";
+import { created, badRequest, internalServerError } from "./utils/http-response.js";
 
 export class CreateUserController {
   async execute(req: Request, res: Response) {
@@ -10,17 +11,13 @@ export class CreateUserController {
       const body = createUserSchema.parse(params);
       const service = new CreateUserService();
       const user = await service.execute(body);
-      return res.status(201).json(user);
+      return created(res, user);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json({
-          message: "Dados inválidos",
-          errors: error.issues,
-        });
+        return badRequest(res, error);
       }
-      return res.status(500).json({
-        message: "Erro interno do servidor.",
-      });
+
+      return internalServerError(res);
     }
   }
 }
