@@ -36,6 +36,12 @@ export function badRequest(res: Response, error: unknown) {
   });
 }
 
+export function notFound(res: Response) {
+  return res.status(404).json({
+    message: "Usuário não encontrado",
+  });
+}
+
 export function internalServerError(res: Response) {
   return res.status(500).json({
     message: "Erro interno do servidor.",
