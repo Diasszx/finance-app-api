@@ -3,10 +3,17 @@ import bcrypt from "bcrypt";
 import { PostgresCreateUserRepository } from "../repositories/postgres/create-user.js";
 import type { CreateUserDTO } from "../schemas/users/create-user.schema.js";
 import type { User } from "../entities/user.entity.js";
+import { PostgresGetUserByEmailRepository } from "../repositories/postgres/get-user-by-email.js";
 
 export class CreateUserService {
   async execute(user: CreateUserDTO): Promise<User> {
-    // TO DO: VERIFICAR SE EMAIL JÁ ESTÁ CADASTRADO!
+    const postgresGetUserByEmailRepository = new PostgresGetUserByEmailRepository();
+    const userWithProvidedEmail = await postgresGetUserByEmailRepository.execute(user.email);
+
+    if (userWithProvidedEmail) {
+      throw new Error("O email inserido já está em uso.");
+    }
+
     const userId = uuidv4();
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const createUser = {
