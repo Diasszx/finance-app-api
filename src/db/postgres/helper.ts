@@ -11,7 +11,7 @@ export const pool = new Pool({
 });
 
 export const PostgresHelper = {
-  query: async <T>(query: string, params?: string[]): Promise<T[]> => {
+  query: async <T>(query: string, params?: unknown[]): Promise<T[]> => {
     const client = await pool.connect();
     const results = await client.query(query, params);
     client.release();
