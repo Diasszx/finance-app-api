@@ -3,6 +3,7 @@ import { createUserSchema } from "../schemas/users/create-user.schema.js";
 import { CreateUserService } from "../services/create-user.js";
 import { ZodError } from "zod";
 import { created, badRequest, internalServerError } from "./utils/http-response.js";
+import { EmailAlreadyInUseError } from "../erros/user.js";
 
 export class CreateUserController {
   async execute(req: Request, res: Response) {
@@ -13,7 +14,8 @@ export class CreateUserController {
       const user = await service.execute(body);
       return created(res, user);
     } catch (error) {
-      if (error instanceof ZodError) {
+      console.log(error);
+      if (error instanceof ZodError || error instanceof EmailAlreadyInUseError) {
         return badRequest(res, error);
       }
 
