@@ -1,4 +1,5 @@
 import type { Response } from "express";
+import { ZodError } from "zod";
 
 export function created(res: Response, data: unknown) {
   return res.status(201).json(data);
@@ -9,6 +10,26 @@ export function ok(res: Response, data: unknown) {
 }
 
 export function badRequest(res: Response, error: unknown) {
+  if (error instanceof ZodError) {
+    return res.status(400).json({
+      message: "Dados inválidos",
+      errors: error.issues.map((issue) => ({
+        field: issue.path[0],
+        message: issue.message,
+      })),
+    });
+  }
+
+  if (error instanceof Error) {
+    return res.status(400).json({
+      message: "Dados inválidos",
+      errors: {
+        name: error.name,
+        message: error.message,
+      },
+    });
+  }
+
   return res.status(400).json({
     message: "Dados inválidos",
     errors: error,
