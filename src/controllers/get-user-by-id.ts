@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
-import { badRequest, internalServerError, ok } from "../controllers/utils/http-response.js";
+import {
+  badRequest,
+  internalServerError,
+  notFound,
+  ok,
+} from "../controllers/utils/http-response.js";
 import { GetUserByIdService } from "../services/get-user-by-id.js";
 import {
   getUserByIdSchema,
@@ -13,6 +18,10 @@ export class GetUserByIdController {
       const { userId } = getUserByIdSchema.parse(req.params);
       const service = new GetUserByIdService();
       const user = await service.execute(userId);
+
+      if (!user) {
+        return notFound(res);
+      }
 
       return ok(res, user);
     } catch (error) {
