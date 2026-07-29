@@ -4,6 +4,7 @@ import { PostgresCreateUserRepository } from "../repositories/postgres/create-us
 import type { CreateUserDTO } from "../schemas/users/create-user.schema.js";
 import type { User } from "../entities/user.entity.js";
 import { PostgresGetUserByEmailRepository } from "../repositories/postgres/get-user-by-email.js";
+import { EmailAlreadyInUseError } from "../erros/user.js";
 
 export class CreateUserService {
   async execute(user: CreateUserDTO): Promise<User> {
@@ -11,7 +12,7 @@ export class CreateUserService {
     const userWithProvidedEmail = await postgresGetUserByEmailRepository.execute(user.email);
 
     if (userWithProvidedEmail) {
-      throw new Error("O email inserido já está em uso.");
+      throw new EmailAlreadyInUseError(user.email);
     }
 
     const userId = uuidv4();
