@@ -1,5 +1,5 @@
 import { PostgresHelper } from "../../db/postgres/helper.js";
-import type { UpdateUserDTO } from "../../schemas/update-user.schema.js";
+import type { UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import type { User } from "../../entities/user.entity.js";
 
 export class PostgresUpdateUserRepository {
@@ -7,13 +7,21 @@ export class PostgresUpdateUserRepository {
     const updateFields: string[] = [];
     const updateValues: unknown[] = [];
 
+    const fieldMap: Record<keyof UpdateUserDTO, string> = {
+      firstName: "first_name",
+      lastName: "last_name",
+      email: "email",
+      password: "password",
+    };
+
     for (const [key, value] of Object.entries(updateUser) as [
       keyof UpdateUserDTO,
       UpdateUserDTO[keyof UpdateUserDTO],
     ][]) {
       if (value === undefined) continue;
+      const dbField = fieldMap[key];
 
-      updateFields.push(`${key} = $${updateValues.length + 1}`);
+      updateFields.push(`${dbField} = $${updateValues.length + 1}`);
       updateValues.push(value);
     }
 
