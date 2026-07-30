@@ -5,6 +5,7 @@ import { CreateUserController } from "./controllers/create-user.js";
 import { GetUserByIdController } from "./controllers/get-user-by-id.js";
 import { type GetUserByIdParamsDTO } from "./schemas/users/get-user-by-id.schema.js";
 import { UpdateUserController } from "./controllers/update-user.js";
+import { DeleteUserController } from "./controllers/delete-user.js";
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,12 @@ app.post("/api/users", async (req: Request, res: Response) => {
 app.patch("/api/users/:userId", async (req: Request, res: Response) => {
   const updateUserController = new UpdateUserController();
   await updateUserController.execute(req, res);
+});
+
+// rota temp de delete, implementar validacao depois
+app.delete("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res: Response) => {
+  const deleteUserController = new DeleteUserController();
+  await deleteUserController.execute(req, res);
 });
 
 // rota teste

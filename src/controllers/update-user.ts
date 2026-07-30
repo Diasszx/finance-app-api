@@ -11,9 +11,9 @@ export class UpdateUserController {
   async execute(req: Request<UpdateUserDTO>, res: Response) {
     try {
       const { userId } = getUserByIdSchema.parse(req.params);
-      const user = updateUserSchema.parse(req.body);
+      const body = updateUserSchema.parse(req.body);
       const updateUserService = new UpdateUserService();
-      const updateUser = await updateUserService.execute(userId, user);
+      const updateUser = await updateUserService.execute(userId, body);
       return ok(res, updateUser);
     } catch (error) {
       console.log(error);
