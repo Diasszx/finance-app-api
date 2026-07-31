@@ -5,7 +5,10 @@ import type { CreateTransactionRepositoryInterface } from "../../interfaces/tran
 export class PostgresCreateTransactionRepository implements CreateTransactionRepositoryInterface {
   async execute(transaction: Transaction): Promise<Transaction> {
     const result = await PostgresHelper.query<Transaction>(
-      "INSERT INTO transaction(ID, user_id, name, date, amount, type) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;",
+      `
+      INSERT INTO transaction(ID, user_id, name, date, amount, type) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
+      RETURNING *;`,
       [
         transaction.id,
         transaction.userId,
