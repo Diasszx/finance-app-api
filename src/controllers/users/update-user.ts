@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
-import { updateUserSchema, type UpdateUserDTO } from "../schemas/users/update-user.schema.js";
+import { updateUserSchema, type UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import { ZodError } from "zod";
-import { badRequest, ok, internalServerError } from "./utils/http-response.js";
-import { FieldNotExists } from "../erros/fields.js";
-import { getUserByIdSchema } from "../schemas/users/get-user-by-id.schema.js";
-import { EmailAlreadyInUseError } from "../erros/user.js";
-import type { updateUserServiceInterface } from "../services/interfaces/update-user.js";
+import { badRequest, ok, internalServerError } from "../utils/http-response.js";
+import { FieldNotExists } from "../../erros/fields.js";
+import { getUserByIdSchema } from "../../schemas/users/get-user-by-id.schema.js";
+import { EmailAlreadyInUseError } from "../../erros/user.js";
+import type { updateUserServiceInterface } from "../../services/interfaces/update-user.js";
 
 export class UpdateUserController {
   constructor(private readonly updateUserService: updateUserServiceInterface) {}
