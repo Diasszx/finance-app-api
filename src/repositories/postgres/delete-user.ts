@@ -4,11 +4,11 @@ import type { DeleteUserRepositoryInterface } from "../interfaces/delete-user.js
 
 export class PostgresDeleteUserRepository implements DeleteUserRepositoryInterface {
   async execute(userId: string): Promise<User | null> {
-    const users = await PostgresHelper.query("DELETE FROM users where id = $1 RETURNING *;", [
+    const users = await PostgresHelper.query<User>("DELETE FROM users where id = $1 RETURNING *;", [
       userId,
     ]);
 
     const [user] = users;
-    return user;
+    return user ?? null;
   }
 }

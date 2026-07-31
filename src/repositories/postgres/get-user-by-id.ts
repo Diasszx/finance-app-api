@@ -8,6 +8,6 @@ export class PostgresGetUserByIdRepository implements GetUserByIdRepositoryInter
 
     const [user] = users;
 
-    return user;
+    return user ?? null;
   }
 }

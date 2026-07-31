@@ -4,7 +4,7 @@ import type { getUserByIdServiceInterface } from "./interfaces/get-user-by-id.js
 
 export class GetUserByIdService implements getUserByIdServiceInterface {
   constructor(private readonly getUserByIdRepository: GetUserByIdRepositoryInterface) {}
-  async execute(userId: string): Promise<User | unknown> {
+  async execute(userId: string): Promise<User | null> {
     const user = await this.getUserByIdRepository.execute(userId);
 
     return user;

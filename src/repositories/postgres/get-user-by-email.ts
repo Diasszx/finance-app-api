@@ -7,6 +7,6 @@ export class PostgresGetUserByEmailRepository implements GetUserByEmailRepositor
     const users = await PostgresHelper.query<User>("SELECT * FROM users where email = $1", [email]);
 
     const [user] = users;
-    return user;
+    return user ?? null;
   }
 }

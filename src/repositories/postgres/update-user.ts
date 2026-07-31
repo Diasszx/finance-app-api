@@ -4,7 +4,7 @@ import type { User } from "../../entities/user.entity.js";
 import type { UpdateUserRepositoryInterface } from "../interfaces/update-user.js";
 
 export class PostgresUpdateUserRepository implements UpdateUserRepositoryInterface {
-  async execute(userId: string, updateUser: UpdateUserDTO): Promise<User | null> {
+  async execute(userId: string, updateUser: UpdateUserDTO): Promise<User> {
     const updateFields: string[] = [];
     const updateValues: unknown[] = [];
 
@@ -40,7 +40,12 @@ export class PostgresUpdateUserRepository implements UpdateUserRepositoryInterfa
     `;
 
     const updatedUser = await PostgresHelper.query<User>(updateQuery, updateValues);
+
     const [user] = updatedUser;
+
+    if (!user) {
+      throw new Error("Falha ao atualizar usuário.");
+    }
 
     return user;
   }
