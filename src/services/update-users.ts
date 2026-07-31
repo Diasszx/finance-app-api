@@ -1,17 +1,19 @@
 import { EmailAlreadyInUseError } from "../erros/user.js";
-import { PostgresGetUserByEmailRepository } from "../repositories/postgres/get-user-by-email.js";
-import { PostgresUpdateUserRepository } from "../repositories/postgres/update-user.js";
+import type { UpdateUserRepositoryInterface } from "../repositories/interfaces/update-user.js";
 import type { UpdateUserDTO } from "../schemas/users/update-user.schema.js";
 import bcrypt from "bcrypt";
+import type { updateUserServiceInterface } from "./interfaces/update-user.js";
+import type { User } from "../entities/user.entity.js";
+import type { GetUserByEmailRepositoryInterface } from "../repositories/interfaces/get-user-by-email.js";
 
-export class UpdateUserService {
-  async execute(userId: string, updateUsers: UpdateUserDTO) {
+export class UpdateUserService implements updateUserServiceInterface {
+  constructor(
+    private readonly updateUserRepository: UpdateUserRepositoryInterface,
+    private readonly getUserByEmail: GetUserByEmailRepositoryInterface,
+  ) {}
+  async execute(userId: string, updateUsers: UpdateUserDTO): Promise<User | undefined> {
     if (updateUsers.email) {
-      const postgresGetUserByEmailRepository = new PostgresGetUserByEmailRepository();
-
-      const userWithProvidedEmail = await postgresGetUserByEmailRepository.execute(
-        updateUsers.email,
-      );
+      const userWithProvidedEmail = await this.getUserByEmail.execute(updateUsers.email);
       if (userWithProvidedEmail && userWithProvidedEmail.id !== userId) {
         throw new EmailAlreadyInUseError(updateUsers.email);
       }
@@ -24,8 +26,7 @@ export class UpdateUserService {
       user.password = hashedPassword;
     }
 
-    const postgresUpdateUserRepository = new PostgresUpdateUserRepository();
-    const updatedUser = await postgresUpdateUserRepository.execute(userId, user);
+    const updatedUser = await this.updateUserRepository.execute(userId, user);
 
     return updatedUser;
   }

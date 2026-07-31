@@ -11,6 +11,8 @@ import { GetUserByIdService } from "./services/get-user-by-id.js";
 import { CreateUserService } from "./services/create-user.js";
 import { PostgresCreateUserRepository } from "./repositories/postgres/create-user.js";
 import { PostgresGetUserByEmailRepository } from "./repositories/postgres/get-user-by-email.js";
+import { PostgresUpdateUserRepository } from "./repositories/postgres/update-user.js";
+import { UpdateUserService } from "./services/update-users.js";
 
 const app = express();
 app.use(express.json());
@@ -25,13 +27,16 @@ app.get("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res: Re
 app.post("/api/users", async (req: Request, res: Response) => {
   const createUserRepository = new PostgresCreateUserRepository();
   const getUserByEmailRepository = new PostgresGetUserByEmailRepository();
-  const service = new CreateUserService(createUserRepository, getUserByEmailRepository);
-  const controller = new CreateUserController(service);
-  await controller.execute(req, res);
+  const createUserService = new CreateUserService(createUserRepository, getUserByEmailRepository);
+  const createUserController = new CreateUserController(createUserService);
+  await createUserController.execute(req, res);
 });
 
 app.patch("/api/users/:userId", async (req: Request, res: Response) => {
-  const updateUserController = new UpdateUserController();
+  const updateUserRepository = new PostgresUpdateUserRepository();
+  const getUserByEmailRepository = new PostgresGetUserByEmailRepository();
+  const updateUserService = new UpdateUserService(updateUserRepository, getUserByEmailRepository);
+  const updateUserController = new UpdateUserController(updateUserService);
   await updateUserController.execute(req, res);
 });
 
