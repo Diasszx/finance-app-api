@@ -5,19 +5,22 @@ import {
   notFound,
   ok,
 } from "../controllers/utils/http-response.js";
-import { GetUserByIdService } from "../services/get-user-by-id.js";
 import {
   getUserByIdSchema,
   type GetUserByIdParamsDTO,
 } from "../schemas/users/get-user-by-id.schema.js";
 import { ZodError } from "zod";
+import type { GetUserByIdService } from "../services/get-user-by-id.js";
 
 export class GetUserByIdController {
+  constructor(service: GetUserByIdService) {
+    this.service = service;
+  }
   async execute(req: Request<GetUserByIdParamsDTO>, res: Response) {
     try {
       const { userId } = getUserByIdSchema.parse(req.params);
-      const service = new GetUserByIdService();
-      const user = await service.execute(userId);
+
+      const user = await this.service.execute(userId);
 
       if (!user) {
         return notFound(res);
