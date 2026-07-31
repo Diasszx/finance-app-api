@@ -1,10 +1,10 @@
 import { EmailAlreadyInUseError } from "../erros/user.js";
-import type { UpdateUserRepositoryInterface } from "../repositories/interfaces/update-user.js";
+import type { UpdateUserRepositoryInterface } from "../repositories/interfaces/user/update-user.js";
 import type { UpdateUserDTO } from "../schemas/users/update-user.schema.js";
 import bcrypt from "bcrypt";
 import type { updateUserServiceInterface } from "./interfaces/update-user.js";
 import type { User } from "../entities/user.entity.js";
-import type { GetUserByEmailRepositoryInterface } from "../repositories/interfaces/get-user-by-email.js";
+import type { GetUserByEmailRepositoryInterface } from "../repositories/interfaces/user/get-user-by-email.js";
 
 export class UpdateUserService implements updateUserServiceInterface {
   constructor(

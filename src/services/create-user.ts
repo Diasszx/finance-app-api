@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import type { CreateUserDTO } from "../schemas/users/create-user.schema.js";
 import type { User } from "../entities/user.entity.js";
 import { EmailAlreadyInUseError } from "../erros/user.js";
-import type { GetUserByEmailRepositoryInterface } from "../repositories/interfaces/get-user-by-email.js";
-import type { CreateUserRepositoryInterface } from "../repositories/interfaces/create-user.js";
+import type { GetUserByEmailRepositoryInterface } from "../repositories/interfaces/user/get-user-by-email.js";
+import type { CreateUserRepositoryInterface } from "../repositories/interfaces/user/create-user.js";
 import type { CreateUserServiceInterface } from "./interfaces/create-user.js";
 export class CreateUserService implements CreateUserServiceInterface {
   constructor(

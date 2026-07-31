@@ -1,7 +1,7 @@
 import { PostgresHelper } from "../../../db/postgres/helper.js";
 import type { UpdateUserDTO } from "../../../schemas/users/update-user.schema.js";
 import type { User } from "../../../entities/user.entity.js";
-import type { UpdateUserRepositoryInterface } from "../../interfaces/update-user.js";
+import type { UpdateUserRepositoryInterface } from "../../interfaces/user/update-user.js";
 
 export class PostgresUpdateUserRepository implements UpdateUserRepositoryInterface {
   async execute(userId: string, updateUser: UpdateUserDTO): Promise<User> {

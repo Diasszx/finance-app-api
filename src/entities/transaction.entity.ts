@@ -1,4 +1,4 @@
-export type TransactionType = "EARNING" | "EXPENSE" | "INVESTMENT";
+import type { TransactionType } from "../schemas/transaction/transaction-type.schema.js";
 
 export interface Transaction {
   id: string;
