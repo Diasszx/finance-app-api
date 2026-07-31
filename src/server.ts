@@ -6,18 +6,28 @@ import { GetUserByIdController } from "./controllers/get-user-by-id.js";
 import { type GetUserByIdParamsDTO } from "./schemas/users/get-user-by-id.schema.js";
 import { UpdateUserController } from "./controllers/update-user.js";
 import { DeleteUserController } from "./controllers/delete-user.js";
+import { PostgresGetUserByIdRepository } from "./repositories/postgres/get-user-by-id.js";
+import { GetUserByIdService } from "./services/get-user-by-id.js";
+import { CreateUserService } from "./services/create-user.js";
+import { PostgresCreateUserRepository } from "./repositories/postgres/create-user.js";
+import { PostgresGetUserByEmailRepository } from "./repositories/postgres/get-user-by-email.js";
 
 const app = express();
 app.use(express.json());
 
 app.get("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res: Response) => {
-  const getUserByIdController = new GetUserByIdController();
+  const repository = new PostgresGetUserByIdRepository();
+  const service = new GetUserByIdService(repository);
+  const controller = new GetUserByIdController(service);
   await getUserByIdController.execute(req, res);
 });
 
 app.post("/api/users", async (req: Request, res: Response) => {
-  const createUserController = new CreateUserController();
-  await createUserController.execute(req, res);
+  const createUserRepository = new PostgresCreateUserRepository();
+  const getUserByEmailRepository = new PostgresGetUserByEmailRepository();
+  const service = new CreateUserService(createUserRepository, getUserByEmailRepository);
+  const controller = new CreateUserController(service);
+  await controller.execute(req, res);
 });
 
 app.patch("/api/users/:userId", async (req: Request, res: Response) => {

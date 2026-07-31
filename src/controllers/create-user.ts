@@ -1,17 +1,17 @@
 import type { Request, Response } from "express";
 import { createUserSchema } from "../schemas/users/create-user.schema.js";
-import { CreateUserService } from "../services/create-user.js";
 import { ZodError } from "zod";
 import { created, badRequest, internalServerError } from "./utils/http-response.js";
 import { EmailAlreadyInUseError } from "../erros/user.js";
+import type { CreateUserServiceInterface } from "../services/interfaces/create-user.js";
 
 export class CreateUserController {
+  constructor(private readonly createUserService: CreateUserServiceInterface) {}
   async execute(req: Request, res: Response) {
     try {
       const params = req.body;
       const body = createUserSchema.parse(params);
-      const service = new CreateUserService();
-      const user = await service.execute(body);
+      const user = await this.createUserService.execute(body);
       return created(res, user);
     } catch (error) {
       console.log(error);
