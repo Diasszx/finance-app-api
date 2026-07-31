@@ -3,16 +3,16 @@ import {
   getUserByIdSchema,
   type GetUserByIdParamsDTO,
 } from "../schemas/users/get-user-by-id.schema.js";
-import { DeleteUserService } from "../services/delete-user.js";
 import { badRequest, internalServerError, notFound, ok } from "./utils/http-response.js";
 import { ZodError } from "zod";
+import type { DeleteUserServiceInterface } from "../services/interfaces/delete-user.js";
 
 export class DeleteUserController {
+  constructor(private readonly deleteUserService: DeleteUserServiceInterface) {}
   async execute(req: Request<GetUserByIdParamsDTO>, res: Response) {
     try {
       const { userId } = getUserByIdSchema.parse(req.params);
-      const service = new DeleteUserService();
-      const user = await service.execute(userId);
+      const user = await this.deleteUserService.execute(userId);
       if (!user) {
         return notFound(res);
       }

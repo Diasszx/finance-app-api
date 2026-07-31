@@ -4,7 +4,7 @@ import type { User } from "../../entities/user.entity.js";
 import type { UpdateUserRepositoryInterface } from "../interfaces/update-user.js";
 
 export class PostgresUpdateUserRepository implements UpdateUserRepositoryInterface {
-  async execute(userId: string, updateUser: UpdateUserDTO): Promise<User | undefined> {
+  async execute(userId: string, updateUser: UpdateUserDTO): Promise<User | null> {
     const updateFields: string[] = [];
     const updateValues: unknown[] = [];
 

@@ -1,9 +1,11 @@
-import { PostgresGetUserByIdRepository } from "../repositories/postgres/get-user-by-id.js";
+import type { User } from "../entities/user.entity.js";
+import type { GetUserByIdRepositoryInterface } from "../repositories/interfaces/get-user-by-id.js";
+import type { getUserByIdServiceInterface } from "./interfaces/get-user-by-id.js";
 
-export class GetUserByIdService {
-  constructor(private readonly repository: PostgresGetUserByIdRepository) {}
-  async execute(userId: string) {
-    const user = await this.repository.execute(userId);
+export class GetUserByIdService implements getUserByIdServiceInterface {
+  constructor(private readonly getUserByIdRepository: GetUserByIdRepositoryInterface) {}
+  async execute(userId: string): Promise<User | unknown> {
+    const user = await this.getUserByIdRepository.execute(userId);
 
     return user;
   }

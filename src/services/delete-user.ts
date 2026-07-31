@@ -1,9 +1,11 @@
-import { DeleteUserRepository } from "../repositories/postgres/delete-user.js";
+import type { User } from "../entities/user.entity.js";
+import type { DeleteUserRepositoryInterface } from "../repositories/interfaces/delete-user.js";
+import type { DeleteUserServiceInterface } from "./interfaces/delete-user.js";
 
-export class DeleteUserService {
-  async execute(userId: string) {
-    const repository = new DeleteUserRepository();
-    const user = await repository.execute(userId);
+export class DeleteUserService implements DeleteUserServiceInterface {
+  constructor(private readonly deleteUserRepository: DeleteUserRepositoryInterface) {}
+  async execute(userId: string): Promise<User | null> {
+    const user = await this.deleteUserRepository.execute(userId);
     return user;
   }
 }

@@ -11,7 +11,7 @@ export class UpdateUserService implements updateUserServiceInterface {
     private readonly updateUserRepository: UpdateUserRepositoryInterface,
     private readonly getUserByEmail: GetUserByEmailRepositoryInterface,
   ) {}
-  async execute(userId: string, updateUsers: UpdateUserDTO): Promise<User | undefined> {
+  async execute(userId: string, updateUsers: UpdateUserDTO): Promise<User | null> {
     if (updateUsers.email) {
       const userWithProvidedEmail = await this.getUserByEmail.execute(updateUsers.email);
       if (userWithProvidedEmail && userWithProvidedEmail.id !== userId) {
