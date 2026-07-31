@@ -1,6 +1,6 @@
-import { PostgresHelper } from "../../db/postgres/helper.js";
-import type { User } from "../../entities/user.entity.js";
-import type { CreateUserRepositoryInterface } from "../interfaces/create-user.js";
+import { PostgresHelper } from "../../../db/postgres/helper.js";
+import type { User } from "../../../entities/user.entity.js";
+import type { CreateUserRepositoryInterface } from "../../interfaces/create-user.js";
 
 export class PostgresCreateUserRepository implements CreateUserRepositoryInterface {
   async execute(user: User): Promise<User> {
