@@ -13,14 +13,16 @@ import { PostgresCreateUserRepository } from "./repositories/postgres/create-use
 import { PostgresGetUserByEmailRepository } from "./repositories/postgres/get-user-by-email.js";
 import { PostgresUpdateUserRepository } from "./repositories/postgres/update-user.js";
 import { UpdateUserService } from "./services/update-users.js";
+import { PostgresDeleteUserRepository } from "./repositories/postgres/delete-user.js";
+import { DeleteUserService } from "./services/delete-user.js";
 
 const app = express();
 app.use(express.json());
 
 app.get("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res: Response) => {
-  const repository = new PostgresGetUserByIdRepository();
-  const service = new GetUserByIdService(repository);
-  const controller = new GetUserByIdController(service);
+  const getUserByIdRepository = new PostgresGetUserByIdRepository();
+  const getUserByIdService = new GetUserByIdService(getUserByIdRepository);
+  const getUserByIdController = new GetUserByIdController(getUserByIdService);
   await getUserByIdController.execute(req, res);
 });
 
@@ -42,7 +44,9 @@ app.patch("/api/users/:userId", async (req: Request, res: Response) => {
 
 // rota temp de delete, implementar validacao depois
 app.delete("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res: Response) => {
-  const deleteUserController = new DeleteUserController();
+  const deleteUserRepository = new PostgresDeleteUserRepository();
+  const deleteUserService = new DeleteUserService(deleteUserRepository);
+  const deleteUserController = new DeleteUserController(deleteUserService);
   await deleteUserController.execute(req, res);
 });
 
