@@ -3,7 +3,7 @@ import { createUserSchema } from "../../schemas/users/create-user.schema.js";
 import { ZodError } from "zod";
 import { created, badRequest, internalServerError } from "../utils/http-response.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
-import type { CreateUserServiceInterface } from "../../services/interfaces/create-user.js";
+import type { CreateUserServiceInterface } from "../../services/interfaces/user/create-user.js";
 
 export class CreateUserController {
   constructor(private readonly createUserService: CreateUserServiceInterface) {}

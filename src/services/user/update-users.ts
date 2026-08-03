@@ -2,7 +2,7 @@ import { EmailAlreadyInUseError } from "../../erros/email.js";
 import type { UpdateUserRepositoryInterface } from "../../repositories/interfaces/user/update-user.js";
 import type { UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import bcrypt from "bcrypt";
-import type { updateUserServiceInterface } from "../interfaces/update-user.js";
+import type { updateUserServiceInterface } from "../interfaces/user/update-user.js";
 import type { User } from "../../entities/user.entity.js";
 import type { GetUserByEmailRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-email.js";
 

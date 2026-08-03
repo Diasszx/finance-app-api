@@ -5,7 +5,7 @@ import {
 } from "../../schemas/users/get-user-by-id.schema.js";
 import { badRequest, internalServerError, notFound, ok } from "../utils/http-response.js";
 import { ZodError } from "zod";
-import type { DeleteUserServiceInterface } from "../../services/interfaces/delete-user.js";
+import type { DeleteUserServiceInterface } from "../../services/interfaces/user/delete-user.js";
 
 export class DeleteUserController {
   constructor(private readonly deleteUserService: DeleteUserServiceInterface) {}

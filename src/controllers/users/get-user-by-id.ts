@@ -5,7 +5,7 @@ import {
   type GetUserByIdParamsDTO,
 } from "../../schemas/users/get-user-by-id.schema.js";
 import { ZodError } from "zod";
-import type { getUserByIdServiceInterface } from "../../services/interfaces/get-user-by-id.js";
+import type { getUserByIdServiceInterface } from "../../services/interfaces/user/get-user-by-id.js";
 
 export class GetUserByIdController {
   constructor(private readonly getUserByIdService: getUserByIdServiceInterface) {}

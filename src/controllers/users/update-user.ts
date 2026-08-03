@@ -5,7 +5,7 @@ import { badRequest, ok, internalServerError } from "../utils/http-response.js";
 import { FieldNotExists } from "../../erros/fields.js";
 import { getUserByIdSchema } from "../../schemas/users/get-user-by-id.schema.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
-import type { updateUserServiceInterface } from "../../services/interfaces/update-user.js";
+import type { updateUserServiceInterface } from "../../services/interfaces/user/update-user.js";
 
 export class UpdateUserController {
   constructor(private readonly updateUserService: updateUserServiceInterface) {}

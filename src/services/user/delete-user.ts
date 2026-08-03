@@ -1,6 +1,6 @@
 import type { User } from "../../entities/user.entity.js";
 import type { DeleteUserRepositoryInterface } from "../../repositories/interfaces/user/delete-user.js";
-import type { DeleteUserServiceInterface } from "../interfaces/delete-user.js";
+import type { DeleteUserServiceInterface } from "../interfaces/user/delete-user.js";
 
 export class DeleteUserService implements DeleteUserServiceInterface {
   constructor(private readonly deleteUserRepository: DeleteUserRepositoryInterface) {}

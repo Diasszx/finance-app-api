@@ -5,7 +5,7 @@ import type { User } from "../../entities/user.entity.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
 import type { GetUserByEmailRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-email.js";
 import type { CreateUserRepositoryInterface } from "../../repositories/interfaces/user/create-user.js";
-import type { CreateUserServiceInterface } from "../interfaces/create-user.js";
+import type { CreateUserServiceInterface } from "../interfaces/user/create-user.js";
 export class CreateUserService implements CreateUserServiceInterface {
   constructor(
     private readonly createUserRepository: CreateUserRepositoryInterface,
