@@ -4,8 +4,9 @@ import { UserNotFoundError } from "../../erros/userId.js";
 import type { CreateTransactionRepositoryInterface } from "../../repositories/interfaces/transaction/create-transaction.js";
 import type { GetUserByIdRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-id.js";
 import type { CreateTransactionDTO } from "../../schemas/transaction/create-transaction.schema.js";
+import type { CreateTransactionServiceInterface } from "../interfaces/transaction/create-transaction.js";
 
-export class CreateTransactionService {
+export class CreateTransactionService implements CreateTransactionServiceInterface {
   constructor(
     private readonly createTransactionRepository: CreateTransactionRepositoryInterface,
     private readonly getUserByIdRepository: GetUserByIdRepositoryInterface,
@@ -15,12 +16,12 @@ export class CreateTransactionService {
     if (!userIdExists) {
       throw new UserNotFoundError(userId);
     }
-    const transactionId = uuidv4();
-    const createdTransaction = await this.createTransactionRepository.execute({
+    const transactionEntity: Transaction = {
       ...transaction,
-      id: transactionId,
-      userId: userId,
-    });
+      id: uuidv4(),
+      userId,
+    };
+    const createdTransaction = await this.createTransactionRepository.execute(transactionEntity);
 
     return createdTransaction;
   }
