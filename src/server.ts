@@ -8,6 +8,7 @@ import {
   makeGetUserByIdController,
   makeUpdateUserController,
 } from "./factories/users.js";
+import { makeCreateTransactionController } from "./factories/controllers/transaction.js";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,11 @@ app.delete("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res:
 app.get("/api/users", async (req: Request, res: Response) => {
   const users = await PostgresHelper.query("SELECT * FROM users;");
   return res.json(users);
+});
+
+app.post("/api/transactions/:userId", async (req: Request, res: Response) => {
+  const createTransactionController = makeCreateTransactionController();
+  await createTransactionController.execute(req, res);
 });
 
 app.listen(process.env.PORT, () => console.log("Listeing port 8080"));
