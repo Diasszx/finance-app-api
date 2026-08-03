@@ -19,12 +19,12 @@ export class CreateUserService implements CreateUserServiceInterface {
     }
     const userId = uuidv4();
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    const createUser = {
+    const userEntity: User = {
       ...user,
       id: userId,
       password: hashedPassword,
     };
-    const createdUser = await this.createUserRepository.execute(createUser);
+    const createdUser = await this.createUserRepository.execute(userEntity);
     return createdUser;
   }
 }
