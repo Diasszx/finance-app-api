@@ -12,7 +12,7 @@ export class PostgresCreateTransactionRepository implements CreateTransactionRep
       [
         transaction.id,
         transaction.userId,
-        transaction.name,
+        transaction.title,
         transaction.date,
         transaction.amount,
         transaction.type,
