@@ -9,10 +9,10 @@ export const createTransactionSchema = z.object({
   amount: z
     .number({ error: "O valor é obrigatório," })
     .min(0.01, "O valor deve ser de pelo menos R$ 0,01.")
-    .refine(
-      (value) => Number.isInteger(value * 100),
-      "O valor deve ter no máximo 2 casas decimais.",
-    ),
+    .refine((value) => {
+      const decimals = value.toString().split(".")[1];
+      return !decimals || decimals.length <= 2;
+    }, "O valor deve ter no máximo 2 casas decimais."),
   type: transactionTypeSchema,
 });
 
