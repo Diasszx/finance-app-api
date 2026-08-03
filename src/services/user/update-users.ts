@@ -1,4 +1,4 @@
-import { EmailAlreadyInUseError } from "../../erros/user.js";
+import { EmailAlreadyInUseError } from "../../erros/email.js";
 import type { UpdateUserRepositoryInterface } from "../../repositories/interfaces/user/update-user.js";
 import type { UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import bcrypt from "bcrypt";
