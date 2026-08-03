@@ -8,7 +8,11 @@ export const createTransactionSchema = z.object({
   date: z.iso.date({ error: "A data é obrigatória." }),
   amount: z
     .number({ error: "O valor é obrigatório," })
-    .min(0.01, "O valor deve ser de pelo menos R$ 0,01."),
+    .min(0.01, "O valor deve ser de pelo menos R$ 0,01.")
+    .refine(
+      (value) => Number.isInteger(value * 100),
+      "O valor deve ter no máximo 2 casas decimais.",
+    ),
   type: transactionTypeSchema,
 });
 
