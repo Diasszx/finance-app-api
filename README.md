@@ -5,6 +5,14 @@ Backend da aplicação **Finance Track**, responsável pelo gerenciamento de usu
 > Este projeto foi desenvolvido com foco em boas práticas de engenharia de software, arquitetura em camadas, baixo acoplamento e escalabilidade.
 
 ---
+## Repositórios do Projeto
+
+| Projeto | Descrição |
+|---------|-----------|
+| 🖥️ **Frontend** | https://github.com/Diasszx/finance-track-web |
+| ⚙️ **Backend** | https://github.com/Diasszx/finance-track-api |
+
+---
 
 # Arquitetura
 
@@ -70,14 +78,6 @@ A arquitetura foi construída para permitir evolução futura com a introdução
 - Commitlint
 - ESLint
 - Prettier
-
----
-
-# Frontend
-
-O frontend desta aplicação encontra-se em:
-
-https://github.com/Diasszx/finance-track
 
 ---
 
