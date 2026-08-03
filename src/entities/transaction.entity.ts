@@ -3,7 +3,7 @@ import type { TransactionType } from "../schemas/transaction/transaction-type.sc
 export interface Transaction {
   id: string;
   userId: string;
-  name: string;
+  title: string;
   date: string;
   amount: number;
   type: TransactionType;
