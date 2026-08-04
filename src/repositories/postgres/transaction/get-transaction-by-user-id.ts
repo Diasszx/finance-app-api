@@ -6,7 +6,7 @@ export class PostgresGetTransactionByUserIdRepository implements GetTransactionB
   async execute(userId: string): Promise<Transaction[]> {
     const transactions = await PostgresHelper.query<Transaction>(
       `
-        SELECT * FROM transaction where id = $1,
+        SELECT * FROM "transaction" where user_id = $1;
         `,
       [userId],
     );

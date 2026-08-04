@@ -14,7 +14,7 @@ export class GetTransactionsByUserIdController {
   ) {}
   async execute(req: TypedRequestQuery<GetTransactionByIdQueryDTO>, res: Response) {
     try {
-      const { userId } = getTransactionByUserIdQuerySchema.parse(req.query.userId);
+      const { userId } = getTransactionByUserIdQuerySchema.parse(req.query);
       const transactions = await this.getTransactionsByUserByidService.execute(userId);
       return ok(res, transactions);
     } catch (error) {
