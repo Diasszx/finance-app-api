@@ -22,30 +22,29 @@
         ],
         "responses": {
           "201": {
-            "description": "User created successfully"
+            "description": "User created successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
             "description": "Invalid params",
             "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "Invalid params"
-                }
-              }
+              "$ref": "#/definitions/BadRequestResponse"
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       }
     },
     "/api/users/{userId}": {
       "get": {
-        "summary": "Get user by Id",
+        "summary": "Get user by ID",
         "tags": ["User"],
         "parameters": [
           {
@@ -53,16 +52,21 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "Id of the user to get"
+            "description": "ID of the user"
           }
         ],
         "responses": {
           "200": {
             "description": "User found",
-            "schema": { "$ref": "#/definitions/User" }
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
-            "description": "Invalid id"
+            "description": "Invalid ID",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
           },
           "404": {
             "description": "User not found",
@@ -72,12 +76,14 @@
           },
           "500": {
             "description": "Internal server error",
-            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       },
-      "delete": {
-        "summary": "Delete a user",
+      "patch": {
+        "summary": "Update user by ID",
         "tags": ["User"],
         "parameters": [
           {
@@ -85,16 +91,29 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "Id of the user to delete"
+            "description": "ID of the user to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserParams"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "User deleted successfully",
-            "schema": { "$ref": "#/definitions/User" }
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
-            "description": "Invalid id"
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
           },
           "404": {
             "description": "User not found",
@@ -104,7 +123,48 @@
           },
           "500": {
             "description": "Internal server error",
-            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete user by ID",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid ID",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFound"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       }
@@ -113,6 +173,7 @@
   "definitions": {
     "CreateUserParams": {
       "type": "object",
+      "required": ["firstName", "lastName", "email", "password"],
       "properties": {
         "firstName": {
           "type": "string",
@@ -130,8 +191,7 @@
           "type": "string",
           "example": "catcatcat123"
         }
-      },
-      "required": ["first_name", "last_name", "email", "password"]
+      }
     },
     "User": {
       "type": "object",
@@ -140,11 +200,11 @@
           "type": "string",
           "example": "9ac98faa-29d9-45e5-b18c-1eeebfd7a0e0"
         },
-        "first_name": {
+        "firstName": {
           "type": "string",
           "example": "Tom"
         },
-        "last_name": {
+        "lastName": {
           "type": "string",
           "example": "Cat"
         },
@@ -158,14 +218,12 @@
         }
       }
     },
-    "InternalServerErrorResponse": {
-      "schema": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Internal server error"
-          }
+    "BadRequestResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Invalid params"
         }
       }
     },
@@ -175,6 +233,15 @@
         "message": {
           "type": "string",
           "example": "User not found"
+        }
+      }
+    },
+    "InternalServerErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Internal server error"
         }
       }
     }
