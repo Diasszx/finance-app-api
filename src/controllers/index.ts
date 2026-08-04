@@ -4,3 +4,4 @@ export * from "./users/get-user-by-id.js";
 export * from "./users/update-user.js";
 
 export * from "./transaction/create-transaction.js";
+export * from "./transaction/get-transaction-by-user-id.js";
