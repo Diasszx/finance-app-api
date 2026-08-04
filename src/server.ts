@@ -8,10 +8,15 @@ import {
   makeGetUserByIdController,
   makeUpdateUserController,
 } from "./factories/users.js";
-import { makeCreateTransactionController } from "./factories/controllers/transaction.js";
+import {
+  makeCreateTransactionController,
+  makeGetTransactionByUserIDController,
+} from "./factories/controllers/transaction.js";
 import fs from "fs";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
+import type { GetTransactionByIdQueryDTO } from "./schemas/transaction/get-transaction-by-id.schema.js";
+import type { TypedRequestQuery } from "./controllers/utils/http.js";
 
 const app = express();
 app.use(express.json());
@@ -47,6 +52,14 @@ app.post("/api/transactions/:userId", async (req: Request, res: Response) => {
   const createTransactionController = makeCreateTransactionController();
   await createTransactionController.execute(req, res);
 });
+
+app.get(
+  "/api/transactions",
+  async (req: TypedRequestQuery<GetTransactionByIdQueryDTO>, res: Response) => {
+    const getTransactionController = makeGetTransactionByUserIDController();
+    await getTransactionController.execute(req, res);
+  },
+);
 
 app.listen(process.env.PORT, () => console.log("Listeing port 8080"));
 
