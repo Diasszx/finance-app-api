@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import { internalServerError, notFound, ok } from "../utils/http-response.js";
 import { UserNotFoundError } from "../../erros/userId.js";
 import type { GetTransactionByIdServiceInterface } from "../../services/interfaces/transaction/get-transaction-by-user-id.js";
