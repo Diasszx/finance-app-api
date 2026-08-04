@@ -25,10 +25,20 @@
             "description": "User created successfully"
           },
           "400": {
-            "description": "Invalid params"
+            "description": "Invalid params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid params"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
           }
         }
       }
@@ -48,16 +58,21 @@
         ],
         "responses": {
           "200": {
-            "description": "User found"
+            "description": "User found",
+            "schema": { "$ref": "#/definitions/User" }
           },
           "400": {
             "description": "Invalid id"
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFound"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
           }
         }
       },
@@ -75,16 +90,21 @@
         ],
         "responses": {
           "200": {
-            "description": "User deleted successfully"
+            "description": "User deleted successfully",
+            "schema": { "$ref": "#/definitions/User" }
           },
           "400": {
             "description": "Invalid id"
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFound"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": { "$ref": "#/definitions/InternalServerErrorResponse" }
           }
         }
       }
@@ -135,6 +155,26 @@
         "password": {
           "type": "string",
           "example": "catcatcat123"
+        }
+      }
+    },
+    "InternalServerErrorResponse": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal server error"
+          }
+        }
+      }
+    },
+    "UserNotFound": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "User not found"
         }
       }
     }
