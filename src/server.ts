@@ -11,6 +11,7 @@ import {
 import {
   makeCreateTransactionController,
   makeGetTransactionByUserIDController,
+  makeUpdateTransactionController,
 } from "./factories/controllers/transaction.js";
 import fs from "fs";
 import path from "path";
@@ -60,6 +61,11 @@ app.get(
     await getTransactionController.execute(req, res);
   },
 );
+
+app.patch("/api/transactions", async (req: Request, res: Response) => {
+  const updateTransactionController = makeUpdateTransactionController();
+  await updateTransactionController.execute(req, res);
+});
 
 app.listen(process.env.PORT, () => console.log("Listeing port 8080"));
 

@@ -6,3 +6,4 @@ export * from "./postgres/user/update-user.js";
 
 export * from "./postgres/transaction/create-transaction.js";
 export * from "./postgres/transaction/get-transaction-by-user-id.js";
+export * from "./postgres/transaction/update-transactions.js";
