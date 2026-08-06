@@ -1,7 +1,7 @@
 export interface Balance {
   userId: string;
-  earning: number;
-  expense: number;
-  investment: number;
+  earnings: number;
+  expenses: number;
+  investments: number;
   balance: number;
 }
