@@ -62,7 +62,7 @@ app.get(
   },
 );
 
-app.patch("/api/transactions", async (req: Request, res: Response) => {
+app.patch("/api/transactions/:TransactionId", async (req: Request, res: Response) => {
   const updateTransactionController = makeUpdateTransactionController();
   await updateTransactionController.execute(req, res);
 });
