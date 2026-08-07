@@ -14,6 +14,9 @@ import {
   GetTransactionsByUserIdController,
   UpdateTransactionController,
 } from "../../controllers/index.js";
+import { PostgresGetUserBalanceRepository } from "../../repositories/postgres/user/get-user-balance.js";
+import { GetUserBalanceService } from "../../services/interfaces/user/get-user-balance.js";
+import { GetUserBalanceController } from "../../controllers/users/get-user-balance.js";
 
 export const makeCreateTransactionController = () => {
   const createTransactionRepository = new PostgresCreateTransactionRepository();
@@ -44,4 +47,15 @@ export const makeUpdateTransactionController = () => {
   const updateTransactionService = new UpdateTransactionService(updateTransactionRepository);
   const updateTransactionController = new UpdateTransactionController(updateTransactionService);
   return updateTransactionController;
+};
+
+export const makeUserBalanceController = () => {
+  const getUserBalanceRepository = new PostgresGetUserBalanceRepository();
+  const getUserByIdRepository = new PostgresGetUserByIdRepository();
+  const getUserBalanceService = new GetUserBalanceService(
+    getUserBalanceRepository,
+    getUserByIdRepository,
+  );
+  const getUserBalanceController = new GetUserBalanceController(getUserBalanceService);
+  return getUserBalanceController;
 };

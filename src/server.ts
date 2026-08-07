@@ -12,6 +12,7 @@ import {
   makeCreateTransactionController,
   makeGetTransactionByUserIDController,
   makeUpdateTransactionController,
+  makeUserBalanceController,
 } from "./factories/controllers/transaction.js";
 import fs from "fs";
 import path from "path";
@@ -65,6 +66,11 @@ app.get(
 app.patch("/api/transactions/:transactionId", async (req: Request, res: Response) => {
   const updateTransactionController = makeUpdateTransactionController();
   await updateTransactionController.execute(req, res);
+});
+
+app.get("/api/user/:userId/balance", async (req: Request, res: Response) => {
+  const getUserBalanceController = makeUserBalanceController();
+  await getUserBalanceController.execute(req, res);
 });
 
 app.listen(process.env.PORT, () => console.log("Listeing port 8080"));
