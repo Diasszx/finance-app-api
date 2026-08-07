@@ -14,7 +14,7 @@
     "format:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
     "prepare": "husky",
-    "migrations": "node/src/db/postgres/migrations/exec.ts"
+    "migrations": "tsx  src/db/postgres/migrations/exec.ts"
   },
   "lint-staged": {
     "*.{ts,js}": [
