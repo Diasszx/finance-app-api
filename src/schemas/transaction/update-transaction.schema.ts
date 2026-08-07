@@ -2,7 +2,7 @@ import z from "zod";
 import { transactionTypeSchema } from "./transaction-type.schema.js";
 
 export const updateTransactionSchema = z.object({
-  title: z.string().min(2, "O título deve ter pelo menos 2 caracteres.").optional(),
+  title: z.string().min(2, "O título deve ter pelo menos 2 caracteres.").trim().optional(),
   date: z.iso.date().optional(),
   amount: z
     .number()
