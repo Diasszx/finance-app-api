@@ -4,3 +4,4 @@ node_modules
 .postgres
 # Environment variables
 .env
+/src/generated/prisma

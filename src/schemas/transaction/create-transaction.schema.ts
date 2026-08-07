@@ -4,6 +4,7 @@ import { transactionTypeSchema } from "./transaction-type.schema.js";
 export const createTransactionSchema = z.object({
   title: z
     .string({ error: "O título é obrigatório." })
+    .trim()
     .min(2, "O título deve ter pelo menos 2 caracteres."),
   date: z.iso.date({ error: "A data é obrigatória." }),
   amount: z
