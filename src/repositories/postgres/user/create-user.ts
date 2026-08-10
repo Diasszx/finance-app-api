@@ -1,22 +1,19 @@
-import { PostgresHelper } from "../../../db/postgres/helper.js";
+import { prisma } from "../../../../prisma/prisma.js";
 import type { User } from "../../../entities/user.entity.js";
 import type { CreateUserRepositoryInterface } from "../../interfaces/user/create-user.js";
 
 export class PostgresCreateUserRepository implements CreateUserRepositoryInterface {
-  async execute(user: User): Promise<User> {
-    const result = await PostgresHelper.query<User>(
-      `
-      INSERT INTO users (ID, first_name,last_name,email,password) 
-      VALUES ($1,$2,$3,$4,$5) 
-      RETURNING *;`,
-      [user.id, user.firstName, user.lastName, user.email, user.password],
-    );
-    const [createdUser] = result;
+  async execute(createUserParams: User): Promise<User> {
+    const user = await prisma.user.create({
+      data: {
+        id: createUserParams.id,
+        firstName: createUserParams.firstName,
+        lastName: createUserParams.lastName,
+        email: createUserParams.email,
+        password: createUserParams.password,
+      },
+    });
 
-    if (!createdUser) {
-      throw new Error("Falha ao criar usuário.");
-    }
-
-    return createdUser;
+    return user;
   }
 }
