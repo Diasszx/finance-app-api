@@ -1,21 +1,43 @@
-import { PostgresHelper } from "../../../db/postgres/helper.js";
+import { prisma } from "../../../../prisma/prisma.js";
 import type { Balance } from "../../../entities/balance.entity.js";
+import type { TransactionType } from "../../../generated/prisma/enums.js";
+import { decimalToNumber } from "../../../utils/decimal-to-number.js";
 import type { GetUserBalanceInterface } from "../../interfaces/user/get-user-balance.js";
 
 export class PostgresGetUserBalanceRepository implements GetUserBalanceInterface {
   async execute(userId: string): Promise<Balance> {
-    const [balance] = await PostgresHelper.query<Balance>(`SELECT * FROM get_user_balance($1)`, [
-      userId,
+    const [expensesSum, earningsSum, investmentsSum] = await Promise.all([
+      this.sumTransactionsByType(userId, "EXPENSE"),
+      this.sumTransactionsByType(userId, "EARNING"),
+      this.sumTransactionsByType(userId, "INVESTMENT"),
     ]);
-    if (!balance) {
-      throw new Error("Balance not found");
-    }
-    return {
+
+    const earnings = decimalToNumber(earningsSum);
+    const expenses = decimalToNumber(expensesSum);
+    const investments = decimalToNumber(investmentsSum);
+
+    const balance = {
       userId,
-      earnings: Number(balance.earnings),
-      expenses: Number(balance.expenses),
-      investments: Number(balance.investments),
-      balance: Number(balance.balance),
+      earnings,
+      expenses,
+      investments,
+      balance: earnings - expenses - investments,
     };
+
+    return balance;
+  }
+
+  private async sumTransactionsByType(userId: string, type: TransactionType) {
+    const { _sum } = await prisma.transaction.aggregate({
+      where: {
+        user_id: userId,
+        type,
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    return _sum.amount;
   }
 }
