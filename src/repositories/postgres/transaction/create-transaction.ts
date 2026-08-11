@@ -15,6 +15,13 @@ export class PostgresCreateTransactionRepository implements CreateTransactionRep
       },
     });
 
-    return transaction;
+    return {
+      id: transaction.id,
+      userId: transaction.userId,
+      title: transaction.title,
+      date: transaction.date.toISOString(),
+      amount: transaction.amount.toNumber(),
+      type: transaction.type,
+    };
   }
 }
