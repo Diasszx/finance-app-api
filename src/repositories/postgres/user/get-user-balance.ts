@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../../../../prisma/prisma.js";
 import type { Balance } from "../../../entities/balance.entity.js";
 import type { TransactionType } from "../../../generated/prisma/enums.js";
@@ -12,32 +13,22 @@ export class PostgresGetUserBalanceRepository implements GetUserBalanceInterface
       this.sumTransactionsByType(userId, "INVESTMENT"),
     ]);
 
-    const earnings = decimalToNumber(earningsSum);
-    const expenses = decimalToNumber(expensesSum);
-    const investments = decimalToNumber(investmentsSum);
+    const balanceDecimal = earningsSum.minus(expensesSum).minus(investmentsSum);
 
-    const balance = {
+    return {
       userId,
-      earnings,
-      expenses,
-      investments,
-      balance: earnings - expenses - investments,
+      earnings: decimalToNumber(earningsSum),
+      expenses: decimalToNumber(expensesSum),
+      investments: decimalToNumber(investmentsSum),
+      balance: decimalToNumber(balanceDecimal), // já calculado com precisão
     };
-
-    return balance;
   }
 
-  private async sumTransactionsByType(userId: string, type: TransactionType) {
+  private async sumTransactionsByType(userId: string, type: TransactionType): Promise<Decimal> {
     const { _sum } = await prisma.transaction.aggregate({
-      where: {
-        userId,
-        type,
-      },
-      _sum: {
-        amount: true,
-      },
+      where: { userId, type },
+      _sum: { amount: true },
     });
-
-    return _sum.amount;
+    return _sum.amount ?? new Decimal(0);
   }
 }
