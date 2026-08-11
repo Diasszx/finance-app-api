@@ -12,7 +12,12 @@ export class PostgresUpdateTransactionsRepository implements UpdateTransactionRe
     const updateTransaction = stripUndefinedProperties(updateTransactionParams);
     const transaction = await prisma.transaction.update({
       where: { id: transactionId },
-      data: updateTransaction,
+      data: {
+        ...updateTransaction,
+        ...(updateTransaction.date && {
+          date: new Date(updateTransaction.date),
+        }),
+      },
     });
     return {
       ...transaction,

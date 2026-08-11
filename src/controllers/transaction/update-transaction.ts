@@ -14,11 +14,11 @@ export class UpdateTransactionController {
   async execute(req: Request<UpdateTransactionDTO>, res: Response) {
     try {
       const { transactionId } = getTransactionByIdSchema.parse(req.params);
-      console.log(req.params);
       const body = updateTransactionSchema.parse(req.body);
       const updateTransaction = await this.updateTransactionService.execute(transactionId, body);
       return ok(res, updateTransaction);
     } catch (error) {
+      console.error(error);
       if (error instanceof ZodError || error instanceof FieldNotExists) {
         return badRequest(res, error);
       }
