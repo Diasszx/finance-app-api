@@ -7,6 +7,7 @@ export class PostgresCreateTransactionRepository implements CreateTransactionRep
     const transaction = await prisma.transaction.create({
       data: {
         ...createTransactionParams,
+        date: new Date(createTransactionParams.date),
       },
     });
 
