@@ -5,3 +5,7 @@ node_modules
 # Environment variables
 .env
 /src/generated/prisma
+postgres-data/
+coverage/
+dist/
+node_modules/
