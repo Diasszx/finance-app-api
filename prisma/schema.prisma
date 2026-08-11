@@ -24,12 +24,13 @@ model User {
 
 model Transaction{
   id String @id @default(uuid())
-  user_id String
-  user User @relation(fields: [user_id], references: [id])
-  name String @db.VarChar(50)
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+  title String @map("name")@db.VarChar(50)
   date DateTime @db.Date
   amount Decimal @db.Decimal(10,2)
   type TransactionType
+
 }
 
 enum TransactionType{
