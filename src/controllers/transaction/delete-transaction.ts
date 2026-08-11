@@ -12,7 +12,7 @@ export class DeleteTransactionController {
   async execute(req: Request<GetTransactionByIdParamsDTO>, res: Response) {
     try {
       const { transactionId } = getTransactionByIdSchema.parse(req.params);
-      const transaction = this.deleteTransactionService.execute(transactionId);
+      const transaction = await this.deleteTransactionService.execute(transactionId);
       if (!transaction) {
         notFound(res);
       }
