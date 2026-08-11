@@ -14,7 +14,7 @@ export const createTransactionSchema = z.object({
       const decimals = value.toString().split(".")[1];
       return !decimals || decimals.length <= 2;
     }, "O valor deve ter no máximo 2 casas decimais."),
-  type: TransactionType,
+  type: z.enum(TransactionType),
 });
 
 export type CreateTransactionDTO = z.infer<typeof createTransactionSchema>;
