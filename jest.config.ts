@@ -1,0 +1,30 @@
+import type { Config } from "jest";
+
+const config: Config = {
+  preset: "ts-jest/presets/default-esm",
+
+  testEnvironment: "node",
+
+  extensionsToTreatAsEsm: [".ts"],
+
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
+  },
+
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+
+  testMatch: ["**/*.test.ts"],
+
+  modulePathIgnorePatterns: ["<rootDir>/postgres-data/"],
+
+  watchPathIgnorePatterns: ["<rootDir>/postgres-data/"],
+};
+
+export default config;
