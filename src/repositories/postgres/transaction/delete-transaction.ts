@@ -4,10 +4,11 @@ import type { DeleteTransactionRepositoryInterface } from "../../interfaces/tran
 
 export class PostgresDeleteTransactionRepository implements DeleteTransactionRepositoryInterface {
   async execute(transactionId: string): Promise<Transaction | null> {
-    return await prisma.transaction.delete({
+    const transaction = await prisma.transaction.delete({
       where: {
         id: transactionId,
       },
     });
+    return transaction ?? null;
   }
 }
