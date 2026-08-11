@@ -1,5 +1,5 @@
 import z from "zod";
-import { transactionTypeSchema } from "./transaction-type.schema.js";
+import { TransactionType } from "../../generated/prisma/enums.js";
 
 export const createTransactionSchema = z.object({
   title: z
@@ -14,7 +14,7 @@ export const createTransactionSchema = z.object({
       const decimals = value.toString().split(".")[1];
       return !decimals || decimals.length <= 2;
     }, "O valor deve ter no máximo 2 casas decimais."),
-  type: transactionTypeSchema,
+  type: TransactionType,
 });
 
 export type CreateTransactionDTO = z.infer<typeof createTransactionSchema>;
