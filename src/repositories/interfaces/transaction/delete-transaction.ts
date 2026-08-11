@@ -1,5 +1,5 @@
 import type { Transaction } from "../../../generated/prisma/client.js";
 
-export interface DeleteTransactionInterface {
+export interface DeleteTransactionRepositoryInterface {
   execute(transactionId: string): Promise<Transaction | null>;
 }
