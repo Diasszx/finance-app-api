@@ -30,7 +30,7 @@ export class PostgresGetUserBalanceRepository implements GetUserBalanceInterface
   private async sumTransactionsByType(userId: string, type: TransactionType) {
     const { _sum } = await prisma.transaction.aggregate({
       where: {
-        user_id: userId,
+        userId,
         type,
       },
       _sum: {
