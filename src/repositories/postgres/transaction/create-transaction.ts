@@ -6,22 +6,14 @@ export class PostgresCreateTransactionRepository implements CreateTransactionRep
   async execute(createTransactionParams: Transaction): Promise<Transaction> {
     const transaction = await prisma.transaction.create({
       data: {
-        id: createTransactionParams.id,
-        userId: createTransactionParams.userId,
-        title: createTransactionParams.title,
-        date: createTransactionParams.date,
-        amount: createTransactionParams.amount,
-        type: createTransactionParams.type,
+        ...createTransactionParams,
       },
     });
 
     return {
-      id: transaction.id,
-      userId: transaction.userId,
-      title: transaction.title,
+      ...transaction,
       date: transaction.date.toISOString(),
       amount: transaction.amount.toNumber(),
-      type: transaction.type,
     };
   }
 }
