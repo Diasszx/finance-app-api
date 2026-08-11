@@ -6,12 +6,9 @@ export class PostgresGetTransactionByUserIdRepository implements GetTransactionB
   async execute(userId: string): Promise<Transaction[]> {
     const transactions = await prisma.transaction.findMany({ where: { userId } });
     return transactions.map((transaction) => ({
-      id: transaction.id,
-      userId: transaction.userId,
-      title: transaction.title,
+      ...transaction,
       date: transaction.date.toISOString(),
       amount: transaction.amount.toNumber(),
-      type: transaction.type,
     }));
   }
 }
