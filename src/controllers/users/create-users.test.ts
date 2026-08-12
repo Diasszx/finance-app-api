@@ -48,4 +48,26 @@ describe("Create User Controller", () => {
       password: "test123456",
     });
   });
+  it("should return 400 if firstName is not provided", async () => {
+    const createUserService = new CreateUserServiceStub();
+    const createUserController = new CreateUserController(createUserService);
+
+    const req = {
+      body: {
+        firstName: "",
+        lastName: "test",
+        email: "test@gmail.com",
+        password: "testetest1234",
+      },
+    } as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    await createUserController.execute(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
 });
