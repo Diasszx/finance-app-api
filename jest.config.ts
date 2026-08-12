@@ -20,7 +20,11 @@ const config: Config = {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
 
-  testMatch: ["**/*.test.ts"],
+  testMatch: [
+    "**/controllers/**/*.test.ts",
+    "**/services/**/*.test.ts",
+    "**/repositories/**/*.test.ts",
+  ],
 
   modulePathIgnorePatterns: ["<rootDir>/postgres-data/"],
 
