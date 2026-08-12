@@ -114,4 +114,26 @@ describe("Create User Controller", () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
+  it("should return 400 if email is not valid", async () => {
+    const createUserService = new CreateUserServiceStub();
+    const createUserController = new CreateUserController(createUserService);
+
+    const req = {
+      body: {
+        firstName: "teste",
+        lastName: "test",
+        email: "te",
+        password: "testetest1234",
+      },
+    } as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    await createUserController.execute(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
 });
