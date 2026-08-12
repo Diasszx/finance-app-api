@@ -18,7 +18,7 @@ describe("Create User Controller", () => {
     }
   }
 
-  it("should create an user", async () => {
+  it("should return 201 when creating a user successfully", async () => {
     const createUserService = new CreateUserServiceStub();
 
     const createUserController = new CreateUserController(createUserService);
@@ -40,7 +40,6 @@ describe("Create User Controller", () => {
     await createUserController.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
-
     expect(res.json).toHaveBeenCalledWith({
       id: "test-id",
       firstName: "Test",
