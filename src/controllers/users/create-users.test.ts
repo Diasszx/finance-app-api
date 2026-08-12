@@ -4,6 +4,7 @@ import type { CreateUserDTO } from "../../schemas/users/create-user.schema.js";
 import type { User } from "../../generated/prisma/client.js";
 import type { CreateUserServiceInterface } from "../../services/interfaces/user/create-user.js";
 import { jest } from "@jest/globals";
+import { faker } from "@faker-js/faker";
 
 describe("Create User Controller", () => {
   class CreateUserServiceStub implements CreateUserServiceInterface {
@@ -25,10 +26,10 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "Test",
-        lastName: "Test",
-        email: "testtest@gmail.com",
-        password: "test123456",
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     } as Request;
 
@@ -42,10 +43,7 @@ describe("Create User Controller", () => {
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
       id: "test-id",
-      firstName: "Test",
-      lastName: "Test",
-      email: "testtest@gmail.com",
-      password: "test123456",
+      ...req.body,
     });
   });
   it("should return 400 if firstName is not provided", async () => {
@@ -54,10 +52,9 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "",
-        lastName: "test",
-        email: "test@gmail.com",
-        password: "testetest1234",
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     } as Request;
 
@@ -76,10 +73,9 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "teste",
-        lastName: "",
-        email: "test@gmail.com",
-        password: "testetest1234",
+        firstName: faker.person.firstName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     } as Request;
 
@@ -98,10 +94,9 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "teste",
-        lastName: "test",
-        email: "",
-        password: "testetest1234",
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: faker.internet.password({ length: 7 }),
       },
     } as Request;
 
@@ -120,10 +115,10 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "teste",
-        lastName: "test",
-        email: "te",
-        password: "testetest1234",
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: "invalid_email",
+        password: faker.internet.password({ length: 7 }),
       },
     } as Request;
 
@@ -142,10 +137,9 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "teste",
-        lastName: "test",
-        email: "test@gmail.com",
-        password: "",
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
       },
     } as Request;
 
@@ -164,10 +158,10 @@ describe("Create User Controller", () => {
 
     const req = {
       body: {
-        firstName: "teste",
-        lastName: "test",
-        email: "test@gmail.com",
-        password: "123",
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 4 }),
       },
     } as Request;
 
@@ -179,5 +173,28 @@ describe("Create User Controller", () => {
     await createUserController.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
+  });
+  it("should call CreateUserService with correct params", async () => {
+    const createUserService = new CreateUserServiceStub();
+    const createUserController = new CreateUserController(createUserService);
+
+    const req = {
+      body: {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    } as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    const executeSpy = jest.spyOn(createUserService, "execute");
+    await createUserController.execute(req, res);
+
+    expect(executeSpy).toHaveBeenCalledWith(req.body);
   });
 });
