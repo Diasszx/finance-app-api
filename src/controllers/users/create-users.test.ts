@@ -20,11 +20,15 @@ describe("Create User Controller", () => {
     }
   }
 
-  it("should return 201 when creating a user successfully", async () => {
+  const makeSut = () => {
     const createUserService = new CreateUserServiceStub();
+    const sut = new CreateUserController(createUserService);
 
-    const createUserController = new CreateUserController(createUserService);
+    return { createUserService, sut };
+  };
 
+  it("should return 201 when creating a user successfully", async () => {
+    const { sut } = makeSut();
     const req = {
       body: {
         firstName: faker.person.firstName(),
@@ -39,7 +43,7 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
@@ -48,8 +52,7 @@ describe("Create User Controller", () => {
     });
   });
   it("should return 400 if firstName is not provided", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -64,13 +67,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should return 400 if lastName is not provided", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -85,13 +87,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should return 400 if email is not provided", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -106,13 +107,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should return 400 if email is not valid", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -128,13 +128,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should return 400 if password is not provided", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -149,13 +148,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should return 400 if password is less than 6 characters", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -171,13 +169,12 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
   });
   it("should call CreateUserService with correct params", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -193,14 +190,13 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    const executeSpy = jest.spyOn(createUserService, "execute");
-    await createUserController.execute(req, res);
+    const executeSpy = jest.spyOn(sut, "execute");
+    await sut.execute(req, res);
 
     expect(executeSpy).toHaveBeenCalledWith(req.body);
   });
   it("should return 500 if CreateUserService throw", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -216,16 +212,15 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    jest.spyOn(createUserService, "execute").mockImplementationOnce(() => {
+    jest.spyOn(sut, "execute").mockImplementationOnce(() => {
       throw new Error();
     });
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
   });
   it("should return 400 if CreateUserService throws EmailAlreadyInUse error", async () => {
-    const createUserService = new CreateUserServiceStub();
-    const createUserController = new CreateUserController(createUserService);
+    const { sut } = makeSut();
 
     const req = {
       body: {
@@ -241,11 +236,11 @@ describe("Create User Controller", () => {
       json: jest.fn().mockReturnThis(),
     } as unknown as Response;
 
-    jest.spyOn(createUserService, "execute").mockImplementationOnce(() => {
+    jest.spyOn(sut, "execute").mockImplementationOnce(() => {
       throw new EmailAlreadyInUseError(req.body.email);
     });
 
-    await createUserController.execute(req, res);
+    await sut.execute(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
   });
 });
