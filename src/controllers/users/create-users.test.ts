@@ -5,6 +5,7 @@ import type { User } from "../../generated/prisma/client.js";
 import type { CreateUserServiceInterface } from "../../services/interfaces/user/create-user.js";
 import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
+import { EmailAlreadyInUseError } from "../../erros/email.js";
 
 describe("Create User Controller", () => {
   class CreateUserServiceStub implements CreateUserServiceInterface {
@@ -221,5 +222,30 @@ describe("Create User Controller", () => {
 
     await createUserController.execute(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
+  });
+  it("should return 400 if CreateUserService throws EmailAlreadyInUse error", async () => {
+    const createUserService = new CreateUserServiceStub();
+    const createUserController = new CreateUserController(createUserService);
+
+    const req = {
+      body: {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    } as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    } as unknown as Response;
+
+    jest.spyOn(createUserService, "execute").mockImplementationOnce(() => {
+      throw new EmailAlreadyInUseError(req.body.email);
+    });
+
+    await createUserController.execute(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 });
