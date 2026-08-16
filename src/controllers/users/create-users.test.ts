@@ -6,7 +6,6 @@ import type { CreateUserServiceInterface } from "../../services/interfaces/user/
 import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
-import { omit } from "../utils/omit.js";
 
 describe("Create User Controller", () => {
   class CreateUserServiceStub implements CreateUserServiceInterface {
