@@ -10,6 +10,7 @@ import {
 } from "./factories/users.js";
 import {
   makeCreateTransactionController,
+  makeDeleteTransactionController,
   makeGetTransactionByUserIDController,
   makeUpdateTransactionController,
   makeUserBalanceController,
@@ -17,7 +18,10 @@ import {
 import fs from "fs";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
-import type { GetTransactionByIdQueryDTO } from "./schemas/transaction/get-transaction-by-id.schema.js";
+import type {
+  GetTransactionByIdParamsDTO,
+  GetTransactionByIdQueryDTO,
+} from "./schemas/transaction/get-transaction-by-id.schema.js";
 import type { TypedRequestQuery } from "./controllers/utils/http.js";
 
 const app = express();
@@ -44,12 +48,6 @@ app.delete("/api/users/:userId", async (req: Request<GetUserByIdParamsDTO>, res:
   await deleteUserController.execute(req, res);
 });
 
-// rota teste
-app.get("/api/users", async (req: Request, res: Response) => {
-  const users = await PostgresHelper.query("SELECT * FROM users;");
-  return res.json(users);
-});
-
 app.post("/api/transactions/:userId", async (req: Request, res: Response) => {
   const createTransactionController = makeCreateTransactionController();
   await createTransactionController.execute(req, res);
@@ -67,6 +65,14 @@ app.patch("/api/transactions/:transactionId", async (req: Request, res: Response
   const updateTransactionController = makeUpdateTransactionController();
   await updateTransactionController.execute(req, res);
 });
+
+app.delete(
+  "/api/transactions/:transactionId",
+  async (req: Request<GetTransactionByIdParamsDTO>, res: Response) => {
+    const deleteTransactionController = makeDeleteTransactionController();
+    await deleteTransactionController.execute(req, res);
+  },
+);
 
 app.get("/api/user/:userId/balance", async (req: Request, res: Response) => {
   const getUserBalanceController = makeUserBalanceController();
