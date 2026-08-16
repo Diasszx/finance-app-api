@@ -4,9 +4,10 @@ import { getUserByIdSchema } from "../../schemas/users/get-user-by-id.schema.js"
 import { ZodError } from "zod";
 import { badRequest, internalServerError, notFound, ok } from "../utils/http-response.js";
 import { UserNotFoundError } from "../../erros/userId.js";
+import type { GetUserBalanceServiceInterface } from "../../services/interfaces/transaction/get-user-balance.js";
 
 export class GetUserBalanceController {
-  constructor(private readonly getUserBalanceService: GetUserBalanceService) {}
+  constructor(private readonly getUserBalanceService: GetUserBalanceServiceInterface) {}
   async execute(req: Request, res: Response) {
     try {
       const { userId } = getUserByIdSchema.parse(req.params);
