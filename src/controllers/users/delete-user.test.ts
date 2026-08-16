@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import { DeleteUserController } from "./delete-user.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import { jest } from "@jest/globals";
+import { Result } from "pg";
 
 describe("DeleteUserController", () => {
   class DeleteUserServiceStub {
@@ -53,5 +54,25 @@ describe("DeleteUserController", () => {
       res,
     );
     expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it("should return 404 if user is not found", async () => {
+    const { sut, deleteUserService } = makeSut();
+    jest.spyOn(deleteUserService, "execute").mockImplementationOnce(async () => null);
+
+    await sut.execute(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  it("should return 500 if DeleteUserService throws", async () => {
+    const { sut, deleteUserService } = makeSut();
+    jest.spyOn(deleteUserService, "execute").mockImplementationOnce(async () => {
+      throw new Error();
+    });
+
+    await sut.execute(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
   });
 });
