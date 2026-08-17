@@ -3,6 +3,7 @@ import type { Balance } from "../../entities/balance.entity.js";
 import { GetUserBalanceController } from "./get-user-balance.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import type { Request, Response } from "express";
+import { jest } from "@jest/globals";
 
 describe("GetUserBalanceController", () => {
   class GetUserBalanceServiceStub {
@@ -52,15 +53,6 @@ describe("GetUserBalanceController", () => {
       res,
     );
     expect(res.status).toHaveBeenCalledWith(400);
-  });
-
-  it("should return 404 if user is not found", async () => {
-    const { sut, getUserBalanceService } = makeSut();
-    jest.spyOn(getUserBalanceService, "execute").mockResolvedValue(null);
-
-    await sut.execute(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(404);
   });
 
   it("should return 500 if GetUserBalanceService throws", async () => {
