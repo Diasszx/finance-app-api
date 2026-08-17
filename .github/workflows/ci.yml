@@ -27,6 +27,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/financeapp
 
       - name: Lint
         run: npm run lint
