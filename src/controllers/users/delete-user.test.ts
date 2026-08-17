@@ -4,9 +4,10 @@ import type { Request, Response } from "express";
 import { DeleteUserController } from "./delete-user.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import { jest } from "@jest/globals";
+import type { DeleteUserServiceInterface } from "../../services/interfaces/user/delete-user.js";
 
 describe("DeleteUserController", () => {
-  class DeleteUserServiceStub {
+  class DeleteUserServiceStub implements DeleteUserServiceInterface {
     async execute(): Promise<User | null> {
       return {
         id: "test-id",

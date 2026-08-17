@@ -4,9 +4,10 @@ import { GetUserBalanceController } from "./get-user-balance.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import type { Request, Response } from "express";
 import { jest } from "@jest/globals";
+import type { GetUserBalanceServiceInterface } from "../../services/interfaces/transaction/get-user-balance.js";
 
 describe("GetUserBalanceController", () => {
-  class GetUserBalanceServiceStub {
+  class GetUserBalanceServiceStub implements GetUserBalanceServiceInterface {
     async execute(): Promise<Balance | null> {
       return {
         userId: "test-id",

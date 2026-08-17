@@ -4,9 +4,10 @@ import type { Request, Response } from "express";
 import type { User } from "../../entities/user.entity.js";
 import { GetUserByIdController } from "./get-user-by-id.js";
 import { jest } from "@jest/globals";
+import type { getUserByIdServiceInterface } from "../../services/interfaces/user/get-user-by-id.js";
 
-describe("GetUserBalanceController", () => {
-  class GetUserByIdServiceStub {
+describe("GetUserByIdController", () => {
+  class GetUserByIdServiceStub implements getUserByIdServiceInterface {
     async execute(): Promise<User | null> {
       return {
         id: "test-id",
