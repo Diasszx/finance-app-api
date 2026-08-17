@@ -4,7 +4,6 @@ import type { Request, Response } from "express";
 import { DeleteUserController } from "./delete-user.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import { jest } from "@jest/globals";
-import { Result } from "pg";
 
 describe("DeleteUserController", () => {
   class DeleteUserServiceStub {
@@ -58,7 +57,7 @@ describe("DeleteUserController", () => {
 
   it("should return 404 if user is not found", async () => {
     const { sut, deleteUserService } = makeSut();
-    jest.spyOn(deleteUserService, "execute").mockImplementationOnce(async () => null);
+    jest.spyOn(deleteUserService, "execute").mockResolvedValue(null);
 
     await sut.execute(req, res);
 
@@ -67,9 +66,7 @@ describe("DeleteUserController", () => {
 
   it("should return 500 if DeleteUserService throws", async () => {
     const { sut, deleteUserService } = makeSut();
-    jest.spyOn(deleteUserService, "execute").mockImplementationOnce(async () => {
-      throw new Error();
-    });
+    jest.spyOn(deleteUserService, "execute").mockRejectedValueOnce(new Error());
 
     await sut.execute(req, res);
 

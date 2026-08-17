@@ -9,10 +9,10 @@ describe("GetUserBalanceController", () => {
     async execute(): Promise<Balance | null> {
       return {
         userId: "test-id",
-        earnings: faker.number.float(),
-        expenses: faker.number.float(),
-        investments: faker.number.float(),
-        balance: faker.number.float(),
+        earnings: faker.number.int(),
+        expenses: faker.number.int(),
+        investments: faker.number.int(),
+        balance: faker.number.int(),
       };
     }
   }
@@ -56,7 +56,7 @@ describe("GetUserBalanceController", () => {
 
   it("should return 404 if user is not found", async () => {
     const { sut, getUserBalanceService } = makeSut();
-    jest.spyOn(getUserBalanceService, "execute").mockImplementationOnce(async () => null);
+    jest.spyOn(getUserBalanceService, "execute").mockResolvedValue(null);
 
     await sut.execute(req, res);
 
@@ -65,9 +65,7 @@ describe("GetUserBalanceController", () => {
 
   it("should return 500 if GetUserBalanceService throws", async () => {
     const { sut, getUserBalanceService } = makeSut();
-    jest.spyOn(getUserBalanceService, "execute").mockImplementationOnce(async () => {
-      throw new Error();
-    });
+    jest.spyOn(getUserBalanceService, "execute").mockRejectedValueOnce(new Error());
 
     await sut.execute(req, res);
 

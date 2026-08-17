@@ -117,9 +117,7 @@ describe("Create User Controller", () => {
   it("should return 500 if CreateUserService throw", async () => {
     const { sut, createUserService } = makeSut();
 
-    jest.spyOn(createUserService, "execute").mockImplementationOnce(() => {
-      throw new Error();
-    });
+    jest.spyOn(createUserService, "execute").mockRejectedValueOnce(new Error());
 
     await sut.execute(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
@@ -128,9 +126,9 @@ describe("Create User Controller", () => {
   it("should return 400 if CreateUserService throws EmailAlreadyInUse error", async () => {
     const { sut, createUserService } = makeSut();
 
-    jest.spyOn(createUserService, "execute").mockImplementationOnce(() => {
-      throw new EmailAlreadyInUseError(req.body.email);
-    });
+    jest
+      .spyOn(createUserService, "execute")
+      .mockRejectedValueOnce(new EmailAlreadyInUseError(req.body.email));
 
     await sut.execute(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
