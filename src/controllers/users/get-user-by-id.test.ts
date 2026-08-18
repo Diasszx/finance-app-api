@@ -43,7 +43,7 @@ describe("GetUserByIdController", () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it("should return 400 when if is invalid", async () => {
+  it("should return 400 when id is invalid", async () => {
     const { sut } = makeSut();
     await sut.execute(
       {

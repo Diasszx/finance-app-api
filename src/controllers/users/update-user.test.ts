@@ -5,6 +5,7 @@ import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import { UpdateUserController } from "./update-user.js";
 import { response, type Request, type Response } from "express";
+import { EmailAlreadyInUseError } from "../../erros/email.js";
 
 describe("UpdateUserController", () => {
   class UpdateUserServiceStub implements updateUserServiceInterface {
@@ -48,5 +49,57 @@ describe("UpdateUserController", () => {
     await sut.execute(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it("should return 400 if email is not valid", async () => {
+    const { sut } = makeSut();
+
+    await sut.execute({ ...req.body, email: "invalid_email" }, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it("should return 400 if password is less than 7 characters", async () => {
+    const { sut } = makeSut();
+
+    await sut.execute({ ...req.body, password: faker.internet.password({ length: 4 }) }, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  //   it("should return 400 when id is invalid", async () => {
+  //       const { sut } = makeSut();
+  //       await sut.execute(
+  //         {
+  //           params: {
+  //             userId: "invalid_id",
+  //           },
+  //         } as Request<GetUserByIdParamsDTO>,
+  //         res,
+  //       );
+  //       expect(res.status).toHaveBeenCalledWith(400);
+  //     });
+
+  it("should return 400 when a unallowed field is provided", async () => {
+    const { sut } = makeSut();
+    await sut.execute({ ...req.body, unallowedField: "unallowedValue" }, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it("should return 500 if UpdateUserController throws", async () => {
+    const { sut, updateUserService } = makeSut();
+    jest.spyOn(updateUserService, "execute").mockRejectedValueOnce(new Error());
+    await sut.execute(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  it("should return 400 if CreateUserService throws EmailAlreadyInUse error", async () => {
+    const { sut, updateUserService } = makeSut();
+
+    jest
+      .spyOn(updateUserService, "execute")
+      .mockRejectedValueOnce(new EmailAlreadyInUseError(req.body.email));
+
+    await sut.execute(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 });

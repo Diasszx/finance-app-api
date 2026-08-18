@@ -16,7 +16,7 @@ export const createUserSchema = z.object({
   password: z
     .string({ error: "A senha é obrigatória." })
     .trim()
-    .min(6, "A senha deve ter no mínimo 8 caracteres."),
+    .min(6, "A senha deve ter no mínimo 7 caracteres."),
 });
 
 export type CreateUserDTO = z.infer<typeof createUserSchema>;

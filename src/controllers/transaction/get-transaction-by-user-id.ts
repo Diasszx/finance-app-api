@@ -1,5 +1,6 @@
 import type { Response } from "express";
-import { internalServerError, notFound, ok } from "../utils/http-response.js";
+import { ZodError } from "zod";
+import { badRequest, internalServerError, notFound, ok } from "../utils/http-response.js";
 import { UserNotFoundError } from "../../erros/userId.js";
 import type { GetTransactionByIdServiceInterface } from "../../services/interfaces/transaction/get-transaction-by-user-id.js";
 import {
@@ -19,6 +20,9 @@ export class GetTransactionsByUserIdController {
       return ok(res, transactions);
     } catch (error) {
       console.log(error);
+      if (error instanceof ZodError) {
+        return badRequest(res, error);
+      }
       if (error instanceof UserNotFoundError) {
         return notFound(res);
       }
