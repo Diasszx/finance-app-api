@@ -7,7 +7,7 @@ import { TransactionType } from "../../generated/prisma/enums.js";
 
 describe("UpdateTransactionService", () => {
   class UpdateTransactionRepositoryStub implements UpdateTransactionRepositoryInterface {
-    async execute(transactionId: string, updateData: unknown): Promise<Transaction | null> {
+    async execute(transactionId: string, updateData: unknown): Promise<Transaction> {
       return {
         id: transactionId,
         userId: faker.string.uuid(),
@@ -66,7 +66,9 @@ describe("UpdateTransactionService", () => {
   it("should return null if transaction does not exist", async () => {
     const { sut, updateTransactionRepository } = makeSut();
     const transactionId = faker.string.uuid();
-    jest.spyOn(updateTransactionRepository, "execute").mockResolvedValueOnce(null);
+    jest
+      .spyOn(updateTransactionRepository, "execute")
+      .mockResolvedValueOnce(null as unknown as Transaction);
 
     const result = await sut.execute(transactionId, createUpdateData());
 

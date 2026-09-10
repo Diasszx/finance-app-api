@@ -26,6 +26,8 @@ const config: Config = {
     "**/repositories/**/*.test.ts",
   ],
 
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.test.ts", "!src/**/*.d.ts", "!src/server.ts"],
+
   modulePathIgnorePatterns: ["<rootDir>/postgres-data/"],
 
   watchPathIgnorePatterns: ["<rootDir>/postgres-data/"],

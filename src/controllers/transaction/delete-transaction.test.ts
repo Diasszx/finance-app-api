@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Transaction } from "../../generated/prisma/client.js";
+import type { Transaction } from "../../entities/transaction.entity.js";
 import type { DeleteTransactionServiceInterface } from "../../services/interfaces/transaction/delete-transaction.js";
 import { DeleteTransactionController } from "./delete-transaction.js";
 import type { Request, Response } from "express";

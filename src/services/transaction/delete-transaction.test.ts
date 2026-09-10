@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { jest } from "@jest/globals";
 import { DeleteTransactionService } from "./delete-transaction.js";
 import type { DeleteTransactionRepositoryInterface } from "../../repositories/interfaces/transaction/delete-transaction.js";
-import type { Transaction } from "../../generated/prisma/client.js";
+import type { Transaction } from "../../entities/transaction.entity.js";
 import { TransactionType } from "../../generated/prisma/enums.js";
 
 describe("DeleteTransactionService", () => {

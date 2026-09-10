@@ -54,10 +54,10 @@ describe("GetTransactionByUserIdService", () => {
 
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBeGreaterThan(0);
-    expect(result[0]).toHaveProperty("id");
-    expect(result[0]).toHaveProperty("title");
-    expect(result[0]).toHaveProperty("amount");
-    expect(result[0]).toHaveProperty("type");
+    expect(result[0]!).toHaveProperty("id");
+    expect(result[0]!).toHaveProperty("title");
+    expect(result[0]!).toHaveProperty("amount");
+    expect(result[0]!).toHaveProperty("type");
   });
 
   it("should throw UserNotFoundError if user does not exist", async () => {
@@ -127,7 +127,7 @@ describe("GetTransactionByUserIdService", () => {
     const result = await sut.execute(userId);
 
     expect(result).toHaveLength(2);
-    expect(result[0].title).toBe("Transaction 1");
-    expect(result[1].title).toBe("Transaction 2");
+    expect(result[0]!.title).toBe("Transaction 1");
+    expect(result[1]!.title).toBe("Transaction 2");
   });
 });
