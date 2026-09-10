@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import type { CreateUserDTO } from "../../schemas/users/create-user.schema.js";
 import type { User } from "../../entities/user.entity.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
@@ -6,11 +5,13 @@ import type { GetUserByEmailRepositoryInterface } from "../../repositories/inter
 import type { CreateUserRepositoryInterface } from "../../repositories/interfaces/user/create-user.js";
 import type { CreateUserServiceInterface } from "../interfaces/user/create-user.js";
 import type { PasswordHasherAdapter } from "../../adapters/passwordHasherAdapter.js";
+import type { IdGenereatorAdapter } from "../../adapters/id-generator.js";
 export class CreateUserService implements CreateUserServiceInterface {
   constructor(
     private readonly createUserRepository: CreateUserRepositoryInterface,
     private readonly getUserByEmailRepository: GetUserByEmailRepositoryInterface,
     private readonly passwordHasherAdapter: PasswordHasherAdapter,
+    private readonly idGeneratorAdapter: IdGenereatorAdapter,
   ) {}
 
   async execute(user: CreateUserDTO): Promise<User> {
@@ -18,7 +19,7 @@ export class CreateUserService implements CreateUserServiceInterface {
     if (userWithProvidedEmail) {
       throw new EmailAlreadyInUseError(user.email);
     }
-    const userId = uuidv4();
+    const userId = this.idGeneratorAdapter.execute();
     const hashedPassword = await this.passwordHasherAdapter.execute(user.password);
     const userEntity: User = {
       ...user,

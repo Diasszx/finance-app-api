@@ -18,7 +18,7 @@ import {
   GetUserByIdService,
   UpdateUserService,
 } from "../services/index.js";
-import { PasswordHasherAdapter } from "../adapters/index.js";
+import { PasswordHasherAdapter, IdGenereatorAdapter } from "../adapters/index.js";
 
 export const makeGetUserByIdController = () => {
   const getUserByIdRepository = new PostgresGetUserByIdRepository();
@@ -32,10 +32,12 @@ export const makeCreateUserController = () => {
   const createUserRepository = new PostgresCreateUserRepository();
   const getUserByEmailRepository = new PostgresGetUserByEmailRepository();
   const passwordHasher = new PasswordHasherAdapter();
+  const idGeneratorAdapter = new IdGenereatorAdapter();
   const createUserService = new CreateUserService(
     createUserRepository,
     getUserByEmailRepository,
     passwordHasher,
+    idGeneratorAdapter,
   );
   const createUserController = new CreateUserController(createUserService);
 
