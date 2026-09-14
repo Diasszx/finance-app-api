@@ -3,30 +3,33 @@ import {
   PostgresGetTransactionByUserIdRepository,
   PostgresGetUserByIdRepository,
   PostgresUpdateTransactionsRepository,
+  PostgresGetUserBalanceRepository,
+  PostgresDeleteTransactionRepository,
 } from "../../repositories/index.js";
 import {
   CreateTransactionService,
   GetTransactionByUserIdService,
   UpdateTransactionService,
+  DeleteTransactionService,
+  GetUserBalanceService,
 } from "../../services/index.js";
 import {
   CreateTransactionController,
   GetTransactionsByUserIdController,
   UpdateTransactionController,
+  GetUserBalanceController,
+  DeleteTransactionController,
 } from "../../controllers/index.js";
-import { PostgresGetUserBalanceRepository } from "../../repositories/postgres/user/get-user-balance.js";
-import { GetUserBalanceService } from "../../services/interfaces/user/get-user-balance.js";
-import { GetUserBalanceController } from "../../controllers/users/get-user-balance.js";
-import { PostgresDeleteTransactionRepository } from "../../repositories/postgres/transaction/delete-transaction.js";
-import { DeleteTransactionService } from "../../services/transaction/delete-transaction.js";
-import { DeleteTransactionController } from "../../controllers/transaction/delete-transaction.js";
+import { IdGeneratorAdapter } from "../../adapters/index.js";
 
 export const makeCreateTransactionController = () => {
   const createTransactionRepository = new PostgresCreateTransactionRepository();
   const getUserByIdRepository = new PostgresGetUserByIdRepository();
+  const idGeneratorAdapter = new IdGeneratorAdapter();
   const createTransactionService = new CreateTransactionService(
     createTransactionRepository,
     getUserByIdRepository,
+    idGeneratorAdapter,
   );
   const createTransactionController = new CreateTransactionController(createTransactionService);
   return createTransactionController;
