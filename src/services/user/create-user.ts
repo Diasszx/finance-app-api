@@ -5,13 +5,13 @@ import type { GetUserByEmailRepositoryInterface } from "../../repositories/inter
 import type { CreateUserRepositoryInterface } from "../../repositories/interfaces/user/create-user.js";
 import type { CreateUserServiceInterface } from "../interfaces/user/create-user.js";
 import type { PasswordHasherAdapter } from "../../adapters/passwordHasherAdapter.js";
-import type { IdGenereatorAdapter } from "../../adapters/id-generator.js";
+import type { IdGeneratorAdapter } from "../../adapters/id-generator.js";
 export class CreateUserService implements CreateUserServiceInterface {
   constructor(
     private readonly createUserRepository: CreateUserRepositoryInterface,
     private readonly getUserByEmailRepository: GetUserByEmailRepositoryInterface,
     private readonly passwordHasherAdapter: PasswordHasherAdapter,
-    private readonly idGeneratorAdapter: IdGenereatorAdapter,
+    private readonly idGeneratorAdapter: IdGeneratorAdapter,
   ) {}
 
   async execute(user: CreateUserDTO): Promise<User> {

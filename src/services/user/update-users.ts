@@ -5,11 +5,13 @@ import bcrypt from "bcrypt";
 import type { updateUserServiceInterface } from "../interfaces/user/update-user.js";
 import type { User } from "../../entities/user.entity.js";
 import type { GetUserByEmailRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-email.js";
+import type { PasswordHasherAdapter } from "../../adapters/passwordHasherAdapter.js";
 
 export class UpdateUserService implements updateUserServiceInterface {
   constructor(
     private readonly updateUserRepository: UpdateUserRepositoryInterface,
     private readonly getUserByEmail: GetUserByEmailRepositoryInterface,
+    private readonly passwordHasher: PasswordHasherAdapter,
   ) {}
   async execute(userId: string, updateUsers: UpdateUserDTO): Promise<User | null> {
     if (updateUsers.email) {
@@ -22,7 +24,7 @@ export class UpdateUserService implements updateUserServiceInterface {
       ...updateUsers,
     };
     if (updateUsers.password) {
-      const hashedPassword = await bcrypt.hash(updateUsers.password, 10);
+      const hashedPassword = await this.passwordHasher.execute(updateUsers.password);
       user.password = hashedPassword;
     }
 
