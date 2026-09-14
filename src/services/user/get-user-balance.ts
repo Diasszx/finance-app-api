@@ -1,6 +1,6 @@
-import { UserNotFoundError } from "../../../erros/userId.js";
-import type { GetUserBalanceInterface } from "../../../repositories/interfaces/user/get-user-balance.js";
-import type { GetUserByIdRepositoryInterface } from "../../../repositories/interfaces/user/get-user-by-id.js";
+import { UserNotFoundError } from "../../erros/userId.js";
+import type { GetUserBalanceInterface } from "../../repositories/interfaces/user/get-user-balance.js";
+import type { GetUserByIdRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-id.js";
 
 export class GetUserBalanceService {
   constructor(

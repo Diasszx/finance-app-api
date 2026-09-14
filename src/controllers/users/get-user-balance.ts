@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { GetUserBalanceService } from "../../services/interfaces/user/get-user-balance.js";
+import type { GetUserBalanceService } from "../../services/user/get-user-balance.js";
 import { getUserByIdSchema } from "../../schemas/users/get-user-by-id.schema.js";
 import { ZodError } from "zod";
 import { badRequest, internalServerError, notFound, ok } from "../utils/http-response.js";
