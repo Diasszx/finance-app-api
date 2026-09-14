@@ -1,5 +1,5 @@
 import { prisma } from "../../../../prisma/prisma.js";
-import type { Transaction } from "../../../generated/prisma/client.js";
+import type { Transaction } from "../../../entities/transaction.entity.js";
 import type { DeleteTransactionRepositoryInterface } from "../../interfaces/transaction/delete-transaction.js";
 
 export class PostgresDeleteTransactionRepository implements DeleteTransactionRepositoryInterface {
@@ -9,6 +9,14 @@ export class PostgresDeleteTransactionRepository implements DeleteTransactionRep
         id: transactionId,
       },
     });
-    return transaction ?? null;
+
+    return {
+      id: transaction.id,
+      userId: transaction.userId,
+      title: transaction.title,
+      date: transaction.date.toISOString(),
+      amount: transaction.amount.toNumber(),
+      type: transaction.type,
+    };
   }
 }

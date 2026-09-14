@@ -1,4 +1,4 @@
-import type { Transaction } from "../../generated/prisma/client.js";
+import type { Transaction } from "../../entities/transaction.entity.js";
 import type { DeleteTransactionRepositoryInterface } from "../../repositories/interfaces/transaction/delete-transaction.js";
 import type { DeleteTransactionServiceInterface } from "../interfaces/transaction/delete-transaction.js";
 
