@@ -34,4 +34,14 @@ describe("Delete User Service", () => {
 
     expect(deletedUser).toEqual(user);
   });
+
+  it("should call deleteUserRepository with correct params", async () => {
+    const { sut, deleteUserRepository } = makeSut();
+    const executeSpy = jest.spyOn(deleteUserRepository, "execute");
+    const userId = faker.string.uuid();
+
+    await sut.execute(userId);
+
+    expect(executeSpy).toHaveBeenCalledWith(userId);
+  });
 });
