@@ -1,5 +1,12 @@
+import { jest } from "@jest/globals";
 import { CreateUserService } from "./create-user.js";
 import { faker } from "@faker-js/faker";
+import type { GetUserByEmailRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-email.js";
+import type { CreateUserRepositoryInterface } from "../../repositories/interfaces/user/create-user.js";
+import type { PasswordHasherInterface } from "../../adapters/interfaces/passwordHasherInterface.js";
+import type { IdGeneratorInterface } from "../../adapters/interfaces/id-generatorInterface.js";
+import { EmailAlreadyInUseError } from "../../erros/email.js";
+import type { User } from "../../entities/user.entity.js";
 
 describe("Create User Service", () => {
   const user = {
@@ -10,25 +17,25 @@ describe("Create User Service", () => {
     password: "hashed_password",
   };
 
-  class GetUserByEmailRepositoryStub {
-    async execute() {
+  class GetUserByEmailRepositoryStub implements GetUserByEmailRepositoryInterface {
+    async execute(): Promise<User | null> {
       return null;
     }
   }
 
-  class CreateUserRepositoryStub {
+  class CreateUserRepositoryStub implements CreateUserRepositoryInterface {
     async execute() {
       return user;
     }
   }
 
-  class PasswordHasherAdapterStub {
+  class PasswordHasherAdapterStub implements PasswordHasherInterface {
     async execute() {
       return "hashed_password";
     }
   }
 
-  class IdGeneratorAdapterStub {
+  class IdGeneratorAdapterStub implements IdGeneratorInterface {
     execute() {
       return "generated_id";
     }
@@ -51,6 +58,7 @@ describe("Create User Service", () => {
       getUserByEmailRepository,
       createUserRepository,
       passwordHasherAdapter,
+      idGeneratorAdapter,
     };
   };
 
@@ -65,5 +73,44 @@ describe("Create User Service", () => {
     });
 
     expect(createdUser).toBeTruthy();
+  });
+
+  it("should throw an EmailAlreadyInUseError if GetUserByEmailRepository returns a user", async () => {
+    const { sut, getUserByEmailRepository } = makeSut();
+    jest.spyOn(getUserByEmailRepository, "execute").mockResolvedValueOnce(user);
+
+    const promise = sut.execute(user);
+
+    await expect(promise).rejects.toThrow(new EmailAlreadyInUseError(user.email));
+  });
+
+  it("should call IdGeneratorAdapter  to generate a random id", async () => {
+    const { sut, idGeneratorAdapter, createUserRepository } = makeSut();
+    const idGeneratorSpy = jest.spyOn(idGeneratorAdapter, "execute");
+    const createUserRepositorySpy = jest.spyOn(createUserRepository, "execute");
+
+    await sut.execute(user);
+
+    expect(idGeneratorSpy).toHaveBeenCalled();
+    expect(createUserRepositorySpy).toHaveBeenCalledWith({
+      ...user,
+      password: "hashed_password",
+      id: "generated_id",
+    });
+  });
+
+  it("should call PasswordHasherAdapter to generate a random id", async () => {
+    const { sut, createUserRepository, passwordHasherAdapter } = makeSut();
+    const passwordHasherSpy = jest.spyOn(passwordHasherAdapter, "execute");
+    const createUserRepositorySpy = jest.spyOn(createUserRepository, "execute");
+
+    await sut.execute(user);
+
+    expect(passwordHasherSpy).toHaveBeenCalled();
+    expect(createUserRepositorySpy).toHaveBeenCalledWith({
+      ...user,
+      password: "hashed_password",
+      id: "generated_id",
+    });
   });
 });
