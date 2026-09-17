@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import type { User } from "../../entities/user.entity.js";
 import type { DeleteUserRepositoryInterface } from "../../repositories/interfaces/user/delete-user.js";
