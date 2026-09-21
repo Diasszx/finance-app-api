@@ -1,20 +1,17 @@
 import { jest } from "@jest/globals";
 import { CreateUserService } from "./create-user.js";
-import { faker } from "@faker-js/faker";
 import type { GetUserByEmailRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-email.js";
 import type { CreateUserRepositoryInterface } from "../../repositories/interfaces/user/create-user.js";
 import type { PasswordHasherInterface } from "../../adapters/interfaces/passwordHasherInterface.js";
 import type { IdGeneratorInterface } from "../../adapters/interfaces/id-generatorInterface.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
 import type { User } from "../../entities/user.entity.js";
+import { user } from "../../tests/index.js";
 
 describe("Create User Service", () => {
-  const user = {
-    id: "generated_id",
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: "hashed_password",
+  const userParams = {
+    ...user,
+    id: undefined,
   };
 
   class GetUserByEmailRepositoryStub implements GetUserByEmailRepositoryInterface {
@@ -37,7 +34,7 @@ describe("Create User Service", () => {
 
   class IdGeneratorAdapterStub implements IdGeneratorInterface {
     execute() {
-      return "generated_id";
+      return user.id;
     }
   }
 
@@ -65,12 +62,7 @@ describe("Create User Service", () => {
   it("should successfully create a user", async () => {
     const { sut } = makeSut();
 
-    const createdUser = await sut.execute({
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({ length: 7 }),
-    });
+    const createdUser = await sut.execute(userParams);
 
     expect(createdUser).toBeTruthy();
   });
@@ -89,13 +81,13 @@ describe("Create User Service", () => {
     const idGeneratorSpy = jest.spyOn(idGeneratorAdapter, "execute");
     const createUserRepositorySpy = jest.spyOn(createUserRepository, "execute");
 
-    await sut.execute(user);
+    await sut.execute(userParams);
 
     expect(idGeneratorSpy).toHaveBeenCalled();
     expect(createUserRepositorySpy).toHaveBeenCalledWith({
       ...user,
       password: "hashed_password",
-      id: "generated_id",
+      id: user.id,
     });
   });
 
@@ -104,13 +96,13 @@ describe("Create User Service", () => {
     const passwordHasherSpy = jest.spyOn(passwordHasherAdapter, "execute");
     const createUserRepositorySpy = jest.spyOn(createUserRepository, "execute");
 
-    await sut.execute(user);
+    await sut.execute(userParams);
 
     expect(passwordHasherSpy).toHaveBeenCalled();
     expect(createUserRepositorySpy).toHaveBeenCalledWith({
       ...user,
       password: "hashed_password",
-      id: "generated_id",
+      id: user.id,
     });
   });
 
@@ -118,7 +110,7 @@ describe("Create User Service", () => {
     const { sut, getUserByEmailRepository } = makeSut();
     jest.spyOn(getUserByEmailRepository, "execute").mockRejectedValueOnce(new Error());
 
-    const promise = sut.execute(user);
+    const promise = sut.execute(userParams);
 
     await expect(promise).rejects.toThrow();
   });
@@ -129,7 +121,7 @@ describe("Create User Service", () => {
       throw new Error();
     });
 
-    const promise = sut.execute(user);
+    const promise = sut.execute(userParams);
 
     await expect(promise).rejects.toThrow();
   });
@@ -140,7 +132,7 @@ describe("Create User Service", () => {
       throw new Error();
     });
 
-    const promise = sut.execute(user);
+    const promise = sut.execute(userParams);
 
     await expect(promise).rejects.toThrow();
   });
@@ -151,7 +143,7 @@ describe("Create User Service", () => {
       throw new Error();
     });
 
-    const promise = sut.execute(user);
+    const promise = sut.execute(userParams);
 
     await expect(promise).rejects.toThrow();
   });

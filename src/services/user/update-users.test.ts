@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { jest } from "@jest/globals";
 import type { PasswordHasherInterface } from "../../adapters/interfaces/passwordHasherInterface.js";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
@@ -7,16 +6,9 @@ import type { GetUserByEmailRepositoryInterface } from "../../repositories/inter
 import type { UpdateUserRepositoryInterface } from "../../repositories/interfaces/user/update-user.js";
 import type { UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import { UpdateUserService } from "./update-users.js";
+import { user } from "../../tests/index.js";
 
 describe("UpdateUserService", () => {
-  const user: User = {
-    id: "generated_id",
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: "hashed_password",
-  };
-
   class GetUserByEmailRepositoryStub implements GetUserByEmailRepositoryInterface {
     async execute(): Promise<User | null> {
       return null;
@@ -56,9 +48,9 @@ describe("UpdateUserService", () => {
   it("should update user successfully (without email and password)", async () => {
     const { sut } = makeSut();
 
-    const result = await sut.execute(faker.string.uuid(), {
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
+    const result = await sut.execute(user.id, {
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
 
     expect(result).toBe(user);
@@ -67,9 +59,9 @@ describe("UpdateUserService", () => {
   it("should update user successfully (with email)", async () => {
     const { sut, getUserByEmailRepository } = makeSut();
     const getUserByEmailRepositorySpy = jest.spyOn(getUserByEmailRepository, "execute");
-    const email = faker.internet.email();
+    const email = user.email;
 
-    const result = await sut.execute(faker.string.uuid(), { email });
+    const result = await sut.execute(user.id, { email });
 
     expect(getUserByEmailRepositorySpy).toHaveBeenCalledWith(email);
     expect(result).toBe(user);
@@ -78,9 +70,9 @@ describe("UpdateUserService", () => {
   it("should update user successfully (with password)", async () => {
     const { sut, passwordHasherAdapter } = makeSut();
     const passwordHasherAdapterSpy = jest.spyOn(passwordHasherAdapter, "execute");
-    const password = faker.internet.password({ length: 7 });
+    const password = user.password;
 
-    const result = await sut.execute(faker.string.uuid(), { password });
+    const result = await sut.execute(user.id, { password });
 
     expect(passwordHasherAdapterSpy).toHaveBeenCalledWith(password);
     expect(result).toBe(user);
@@ -90,7 +82,7 @@ describe("UpdateUserService", () => {
     const { sut, getUserByEmailRepository } = makeSut();
     jest.spyOn(getUserByEmailRepository, "execute").mockResolvedValue(user);
 
-    const promise = sut.execute(faker.string.uuid(), { email: user.email });
+    const promise = sut.execute("another-user-id", { email: user.email });
 
     await expect(promise).rejects.toThrow(new EmailAlreadyInUseError(user.email));
   });
@@ -117,8 +109,8 @@ describe("UpdateUserService", () => {
     const { sut, getUserByEmailRepository } = makeSut();
     jest.spyOn(getUserByEmailRepository, "execute").mockRejectedValue(new Error());
 
-    const promise = sut.execute(faker.string.uuid(), {
-      email: faker.internet.email(),
+    const promise = sut.execute(user.id, {
+      email: user.email,
     });
 
     await expect(promise).rejects.toThrow();
@@ -128,8 +120,8 @@ describe("UpdateUserService", () => {
     const { sut, passwordHasherAdapter } = makeSut();
     jest.spyOn(passwordHasherAdapter, "execute").mockRejectedValue(new Error());
 
-    const promise = sut.execute(faker.string.uuid(), {
-      password: faker.internet.password({ length: 7 }),
+    const promise = sut.execute(user.id, {
+      password: user.password,
     });
 
     await expect(promise).rejects.toThrow();
@@ -139,11 +131,11 @@ describe("UpdateUserService", () => {
     const { sut, updateUserRepository } = makeSut();
     jest.spyOn(updateUserRepository, "execute").mockRejectedValue(new Error());
 
-    const promise = sut.execute(faker.string.uuid(), {
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({ length: 7 }),
+    const promise = sut.execute(user.id, {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
     });
 
     await expect(promise).rejects.toThrow();

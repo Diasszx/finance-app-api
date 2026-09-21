@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-const user = {
+export const user = {
   id: faker.string.uuid(),
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),

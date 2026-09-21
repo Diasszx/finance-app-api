@@ -1,18 +1,10 @@
-import { faker } from "@faker-js/faker";
 import { jest } from "@jest/globals";
 import type { User } from "../../entities/user.entity.js";
 import type { GetUserByIdRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-id.js";
 import { GetUserByIdService } from "./get-user-by-id.js";
+import { user } from "../../tests/index.js";
 
 describe("GetUserByIdService", () => {
-  const user: User = {
-    id: "generated_id",
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: "hashed_password",
-  };
-
   class GetUserByIdRepositoryStub implements GetUserByIdRepositoryInterface {
     async execute(): Promise<User | null> {
       return user;
@@ -32,7 +24,7 @@ describe("GetUserByIdService", () => {
   it("should get user by id successfully", async () => {
     const { sut } = makeSut();
 
-    const result = await sut.execute(faker.string.uuid());
+    const result = await sut.execute(user.id);
 
     expect(result).toEqual(user);
   });
@@ -40,7 +32,7 @@ describe("GetUserByIdService", () => {
   it("should call GetUserByIdRepository with correct params", async () => {
     const { sut, getUserByIdRepository } = makeSut();
     const executeSpy = jest.spyOn(getUserByIdRepository, "execute");
-    const userId = faker.string.uuid();
+    const userId = user.id;
 
     await sut.execute(userId);
 
@@ -51,7 +43,7 @@ describe("GetUserByIdService", () => {
     const { sut, getUserByIdRepository } = makeSut();
     jest.spyOn(getUserByIdRepository, "execute").mockRejectedValue(new Error());
 
-    const promise = sut.execute(faker.string.uuid());
+    const promise = sut.execute(user.id);
 
     await expect(promise).rejects.toThrow();
   });

@@ -1,31 +1,13 @@
-import { faker } from "@faker-js/faker";
 import { jest } from "@jest/globals";
 import type { Transaction } from "../../entities/transaction.entity.js";
 import { UserNotFoundError } from "../../erros/userId.js";
 import type { GetTransactionByUserIdInterface } from "../../repositories/interfaces/transaction/get-transaction-by-user-id.js";
 import type { GetUserByIdRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-id.js";
-import { TransactionType } from "../../generated/prisma/enums.js";
 import { GetTransactionByUserIdService } from "./get-transaction-by-user-id.js";
+import { transaction, user } from "../../tests/index.js";
 
 describe("GetTransactionByUserIdService", () => {
-  const user = {
-    id: faker.string.uuid(),
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: "hashed_password",
-  };
-
-  const transactions: Transaction[] = [
-    {
-      id: faker.string.uuid(),
-      userId: user.id,
-      title: faker.string.alpha({ length: 10 }),
-      date: faker.date.future().toISOString().slice(0, 10),
-      amount: faker.number.float({ min: 0.01, max: 1000, fractionDigits: 2 }),
-      type: faker.helpers.arrayElement(Object.values(TransactionType)),
-    },
-  ];
+  const transactions: Transaction[] = [transaction];
 
   class GetTransactionsByUserIdRepositoryStub implements GetTransactionByUserIdInterface {
     async execute(): Promise<Transaction[] | null> {
@@ -56,9 +38,7 @@ describe("GetTransactionByUserIdService", () => {
 
   it("should get transactions by user id successfully", async () => {
     const { sut } = makeSut();
-    const userId = faker.string.uuid();
-
-    const result = await sut.execute(userId);
+    const result = await sut.execute(user.id);
 
     expect(result).toEqual(transactions);
   });
@@ -66,21 +46,17 @@ describe("GetTransactionByUserIdService", () => {
   it("should throw UserNotFoundError if user does not exist", async () => {
     const { sut, getUserByIdRepository } = makeSut();
     jest.spyOn(getUserByIdRepository, "execute").mockResolvedValueOnce(null);
-    const userId = faker.string.uuid();
+    const promise = sut.execute(user.id);
 
-    const promise = sut.execute(userId);
-
-    await expect(promise).rejects.toThrow(new UserNotFoundError(userId));
+    await expect(promise).rejects.toThrow(new UserNotFoundError(user.id));
   });
 
   it("should call GetUserByIdRepository with correct params", async () => {
     const { sut, getUserByIdRepository } = makeSut();
     const getUserByIdRepositorySpy = jest.spyOn(getUserByIdRepository, "execute");
-    const userId = faker.string.uuid();
+    await sut.execute(user.id);
 
-    await sut.execute(userId);
-
-    expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(userId);
+    expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(user.id);
   });
 
   it("should call GetTransactionByUserIdRepository with correct params", async () => {
@@ -89,19 +65,15 @@ describe("GetTransactionByUserIdService", () => {
       getTransactionByUserIdRepository,
       "execute",
     );
-    const userId = faker.string.uuid();
+    await sut.execute(user.id);
 
-    await sut.execute(userId);
-
-    expect(getTransactionByUserIdRepositorySpy).toHaveBeenCalledWith(userId);
+    expect(getTransactionByUserIdRepositorySpy).toHaveBeenCalledWith(user.id);
   });
 
   it("should throw if GetUserByIdRepository throws", async () => {
     const { sut, getUserByIdRepository } = makeSut();
     jest.spyOn(getUserByIdRepository, "execute").mockRejectedValueOnce(new Error());
-    const userId = faker.string.uuid();
-
-    const promise = sut.execute(userId);
+    const promise = sut.execute(user.id);
 
     await expect(promise).rejects.toThrow();
   });
@@ -109,9 +81,7 @@ describe("GetTransactionByUserIdService", () => {
   it("should throw if GetTransactionByUserIdRepository throws", async () => {
     const { sut, getTransactionByUserIdRepository } = makeSut();
     jest.spyOn(getTransactionByUserIdRepository, "execute").mockRejectedValueOnce(new Error());
-    const userId = faker.string.uuid();
-
-    const promise = sut.execute(userId);
+    const promise = sut.execute(user.id);
 
     await expect(promise).rejects.toThrow();
   });
