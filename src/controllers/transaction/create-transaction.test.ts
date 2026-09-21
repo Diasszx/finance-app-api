@@ -1,23 +1,19 @@
-import { faker } from "@faker-js/faker";
 import type { Transaction } from "../../entities/transaction.entity.js";
 import type { CreateTransactionDTO } from "../../schemas/transaction/create-transaction.schema.js";
 import type { CreateTransactionServiceInterface } from "../../services/interfaces/transaction/create-transaction.js";
-import { TransactionType } from "../../generated/prisma/enums.js";
 import { CreateTransactionController } from "./create-transaction.js";
 import type { Request, Response } from "express";
 import { jest } from "@jest/globals";
 import { UserNotFoundError } from "../../erros/userId.js";
+import { transaction, user } from "../../tests/index.js";
 
 describe("CreateTransactionController", () => {
   class CreateTransactionServiceStub implements CreateTransactionServiceInterface {
     async execute(userId: string, transaction: CreateTransactionDTO): Promise<Transaction> {
       return {
-        id: faker.string.uuid(),
-        userId: userId,
-        title: transaction.title,
-        date: transaction.date,
-        amount: transaction.amount,
-        type: transaction.type,
+        ...transaction,
+        id: transaction.id ?? "generated-id",
+        userId,
       };
     }
   }
@@ -31,13 +27,13 @@ describe("CreateTransactionController", () => {
   const createReq = (overrides = {}) =>
     ({
       params: {
-        userId: faker.string.uuid(),
+        userId: user.id,
       },
       body: {
-        title: faker.string.alpha({ length: 10 }),
-        date: faker.date.future().toISOString().slice(0, 10),
-        amount: faker.number.float({ min: 0.01, max: 1000, fractionDigits: 2 }),
-        type: faker.helpers.arrayElement(Object.values(TransactionType)),
+        title: transaction.title,
+        date: transaction.date,
+        amount: transaction.amount,
+        type: transaction.type,
         ...overrides,
       },
     }) as unknown as Request;
@@ -186,7 +182,7 @@ describe("CreateTransactionController", () => {
   it("should return 400 if CreateTransactionService throws UserNotFoundError", async () => {
     const { sut, createTransactionService } = makeSut();
     const req = createReq();
-    const userId = faker.string.uuid();
+    const userId = req.params.userId;
 
     jest
       .spyOn(createTransactionService, "execute")

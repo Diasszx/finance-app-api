@@ -2,20 +2,17 @@ import type { User } from "../../entities/user.entity.js";
 import type { UpdateUserDTO } from "../../schemas/users/update-user.schema.js";
 import type { updateUserServiceInterface } from "../../services/interfaces/user/update-user.js";
 import { jest } from "@jest/globals";
-import { faker } from "@faker-js/faker";
 import { UpdateUserController } from "./update-user.js";
 import { response, type Request, type Response } from "express";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
+import { user } from "../../tests/index.js";
 
 describe("UpdateUserController", () => {
   class UpdateUserServiceStub implements updateUserServiceInterface {
     async execute(userId: string, updateUsers: UpdateUserDTO): Promise<User | null> {
       return {
-        id: "test-id",
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password({ length: 7 }),
+        ...user,
+        id: userId,
       };
     }
   }
@@ -28,13 +25,13 @@ describe("UpdateUserController", () => {
 
   const req = {
     params: {
-      userId: faker.string.uuid(),
+      userId: user.id,
     },
     body: {
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({ length: 7 }),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
     },
   } as unknown as Request;
 
@@ -62,7 +59,7 @@ describe("UpdateUserController", () => {
   it("should return 400 if password is less than 7 characters", async () => {
     const { sut } = makeSut();
 
-    await sut.execute({ ...req.body, password: faker.internet.password({ length: 4 }) }, res);
+    await sut.execute({ ...req.body, password: "1234" }, res);
     expect(res.status).toHaveBeenCalledWith(400);
   });
 

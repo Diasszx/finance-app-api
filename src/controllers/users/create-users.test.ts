@@ -1,17 +1,18 @@
 import type { Request, Response } from "express";
 import { CreateUserController } from "./create-user.js";
 import type { CreateUserDTO } from "../../schemas/users/create-user.schema.js";
-import type { User } from "../../generated/prisma/client.js";
+import type { User } from "../../entities/user.entity.js";
 import type { CreateUserServiceInterface } from "../../services/interfaces/user/create-user.js";
 import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import { EmailAlreadyInUseError } from "../../erros/email.js";
+import { user } from "../../tests/index.js";
 
 describe("Create User Controller", () => {
   class CreateUserServiceStub implements CreateUserServiceInterface {
     async execute(user: CreateUserDTO): Promise<User> {
       return {
-        id: "test-id",
+        id: user.id ?? "test-id",
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -28,12 +29,7 @@ describe("Create User Controller", () => {
   };
 
   const req = {
-    body: {
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({ length: 7 }),
-    },
+    body: { ...user, id: undefined },
   } as Request;
 
   const res = {
@@ -48,8 +44,8 @@ describe("Create User Controller", () => {
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      id: "test-id",
       ...req.body,
+      id: "test-id",
     });
   });
 

@@ -1,20 +1,20 @@
-import { faker } from "@faker-js/faker";
 import type { Balance } from "../../entities/balance.entity.js";
 import { GetUserBalanceController } from "./get-user-balance.js";
 import type { GetUserByIdParamsDTO } from "../../schemas/users/get-user-by-id.schema.js";
 import type { Request, Response } from "express";
 import { jest } from "@jest/globals";
 import type { GetUserBalanceServiceInterface } from "../../services/interfaces/transaction/get-user-balance.js";
+import { user } from "../../tests/index.js";
 
 describe("GetUserBalanceController", () => {
   class GetUserBalanceServiceStub implements GetUserBalanceServiceInterface {
     async execute(): Promise<Balance | null> {
       return {
-        userId: "test-id",
-        earnings: faker.number.int(),
-        expenses: faker.number.int(),
-        investments: faker.number.int(),
-        balance: faker.number.int(),
+        userId: user.id,
+        earnings: 1000,
+        expenses: 200,
+        investments: 300,
+        balance: 500,
       };
     }
   }
@@ -27,7 +27,7 @@ describe("GetUserBalanceController", () => {
 
   const req = {
     params: {
-      userId: faker.string.uuid(),
+      userId: user.id,
     },
   } as unknown as Request<GetUserByIdParamsDTO>;
 

@@ -1,8 +1,7 @@
-import { faker } from "@faker-js/faker";
 import type { Transaction } from "../../entities/transaction.entity.js";
 import type { UpdateTransactionDTO } from "../../schemas/transaction/update-transaction.schema.js";
 import type { UpdateTransactionServiceInterface } from "../../services/interfaces/transaction/update-transaction.js";
-import { TransactionType } from "../../generated/prisma/enums.js";
+import { transaction } from "../../tests/index.js";
 import { UpdateTransactionController } from "./update-transaction.js";
 import type { Request, Response } from "express";
 import { jest } from "@jest/globals";
@@ -14,14 +13,9 @@ describe("UpdateTransactionController", () => {
       updateTransaction: UpdateTransactionDTO,
     ): Promise<Transaction | null> {
       return {
+        ...transaction,
+        ...updateTransaction,
         id: transactionId,
-        userId: faker.string.uuid(),
-        title: updateTransaction.title || faker.string.alpha({ length: 10 }),
-        date: updateTransaction.date || faker.date.future().toISOString().slice(0, 10),
-        amount:
-          updateTransaction.amount ||
-          faker.number.float({ min: 0.01, max: 1000, fractionDigits: 2 }),
-        type: updateTransaction.type || faker.helpers.arrayElement(Object.values(TransactionType)),
       };
     }
   }
@@ -35,13 +29,13 @@ describe("UpdateTransactionController", () => {
   const createReq = (overrides = {}) =>
     ({
       params: {
-        transactionId: faker.string.uuid(),
+        transactionId: transaction.id,
       },
       body: {
-        title: faker.string.alpha({ length: 10 }),
-        date: faker.date.future().toISOString().slice(0, 10),
-        amount: faker.number.float({ min: 0.01, max: 1000, fractionDigits: 2 }),
-        type: faker.helpers.arrayElement(Object.values(TransactionType)),
+        title: transaction.title,
+        date: transaction.date,
+        amount: transaction.amount,
+        type: transaction.type,
         ...overrides,
       },
     }) as unknown as Request;

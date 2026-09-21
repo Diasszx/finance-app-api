@@ -1,23 +1,15 @@
-import { faker } from "@faker-js/faker";
 import type { Transaction } from "../../entities/transaction.entity.js";
 import type { DeleteTransactionServiceInterface } from "../../services/interfaces/transaction/delete-transaction.js";
 import { DeleteTransactionController } from "./delete-transaction.js";
 import type { Request, Response } from "express";
 import { jest } from "@jest/globals";
 import type { GetTransactionByIdParamsDTO } from "../../schemas/transaction/get-transaction-by-id.schema.js";
-import { TransactionType } from "../../generated/prisma/enums.js";
+import { transaction } from "../../tests/index.js";
 
 describe("DeleteTransactionController", () => {
   class DeleteTransactionServiceStub implements DeleteTransactionServiceInterface {
     async execute(): Promise<Transaction | null> {
-      return {
-        id: faker.string.uuid(),
-        userId: faker.string.uuid(),
-        title: faker.string.alpha({ length: 10 }),
-        date: faker.date.future().toISOString().slice(0, 10),
-        amount: faker.number.float({ min: 0.01, max: 1000, fractionDigits: 2 }),
-        type: faker.helpers.arrayElement(Object.values(TransactionType)),
-      };
+      return transaction;
     }
   }
 
@@ -29,7 +21,7 @@ describe("DeleteTransactionController", () => {
 
   const req = {
     params: {
-      transactionId: faker.string.uuid(),
+      transactionId: transaction.id,
     },
   } as unknown as Request<GetTransactionByIdParamsDTO>;
 
