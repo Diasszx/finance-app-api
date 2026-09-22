@@ -4,7 +4,7 @@ import type { DeleteUserRepositoryInterface } from "../../interfaces/user/delete
 
 export class PostgresDeleteUserRepository implements DeleteUserRepositoryInterface {
   async execute(userId: string): Promise<User | null> {
-    const user = prisma.user.delete({
+    const user = await prisma.user.delete({
       where: {
         id: userId,
       },
