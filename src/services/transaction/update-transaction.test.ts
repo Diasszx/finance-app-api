@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import type { Transaction } from "../../entities/transaction.entity.js";
 import type { UpdateTransactionRepositoryInterface } from "../../repositories/interfaces/transaction/update-transaction.js";
 import type { UpdateTransactionDTO } from "../../schemas/transaction/update-transaction.schema.js";
 import { UpdateTransactionService } from "./update-transaction.js";

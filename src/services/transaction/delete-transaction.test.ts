@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import type { Transaction } from "../../entities/transaction.entity.js";
 import type { DeleteTransactionRepositoryInterface } from "../../repositories/interfaces/transaction/delete-transaction.js";
 import { DeleteTransactionService } from "./delete-transaction.js";
 import { transaction } from "../../tests/index.js";

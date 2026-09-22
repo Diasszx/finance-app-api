@@ -12,7 +12,7 @@ describe("Create User Controller", () => {
   class CreateUserServiceStub implements CreateUserServiceInterface {
     async execute(user: CreateUserDTO): Promise<User> {
       return {
-        id: user.id ?? "test-id",
+        id: "test-id",
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,

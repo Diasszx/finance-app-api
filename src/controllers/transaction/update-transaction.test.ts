@@ -13,9 +13,12 @@ describe("UpdateTransactionController", () => {
       updateTransaction: UpdateTransactionDTO,
     ): Promise<Transaction | null> {
       return {
-        ...transaction,
-        ...updateTransaction,
         id: transactionId,
+        userId: transaction.userId,
+        title: updateTransaction.title ?? transaction.title,
+        date: updateTransaction.date ?? transaction.date,
+        amount: updateTransaction.amount ?? transaction.amount,
+        type: updateTransaction.type ?? transaction.type,
       };
     }
   }

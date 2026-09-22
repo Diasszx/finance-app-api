@@ -12,7 +12,7 @@ describe("CreateTransactionController", () => {
     async execute(userId: string, transaction: CreateTransactionDTO): Promise<Transaction> {
       return {
         ...transaction,
-        id: transaction.id ?? "generated-id",
+        id: "generated-id",
         userId,
       };
     }
@@ -182,7 +182,7 @@ describe("CreateTransactionController", () => {
   it("should return 400 if CreateTransactionService throws UserNotFoundError", async () => {
     const { sut, createTransactionService } = makeSut();
     const req = createReq();
-    const userId = req.params.userId;
+    const userId = req.params.userId as string;
 
     jest
       .spyOn(createTransactionService, "execute")

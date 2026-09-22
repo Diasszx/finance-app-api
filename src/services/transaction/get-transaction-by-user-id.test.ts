@@ -1,5 +1,6 @@
 import { jest } from "@jest/globals";
 import type { Transaction } from "../../entities/transaction.entity.js";
+import type { User } from "../../entities/user.entity.js";
 import { UserNotFoundError } from "../../erros/userId.js";
 import type { GetTransactionByUserIdInterface } from "../../repositories/interfaces/transaction/get-transaction-by-user-id.js";
 import type { GetUserByIdRepositoryInterface } from "../../repositories/interfaces/user/get-user-by-id.js";
@@ -16,7 +17,7 @@ describe("GetTransactionByUserIdService", () => {
   }
 
   class GetUserByIdRepositoryStub implements GetUserByIdRepositoryInterface {
-    async execute() {
+    async execute(): Promise<User | null> {
       return user;
     }
   }

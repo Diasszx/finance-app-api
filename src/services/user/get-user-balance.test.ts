@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { jest } from "@jest/globals";
+import type { User } from "../../entities/user.entity.js";
 import { UserNotFoundError } from "../../erros/userId.js";
 import type { Balance } from "../../entities/balance.entity.js";
 import type { GetUserBalanceInterface } from "../../repositories/interfaces/user/get-user-balance.js";
